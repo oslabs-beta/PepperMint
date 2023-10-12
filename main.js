@@ -1,5 +1,6 @@
 const { app, ipcMain, BrowserWindow } = require('electron');
 const path = require('path');
+const User = require('./models/UserModel');
 
 const isDev = !app.isPackaged;
 
