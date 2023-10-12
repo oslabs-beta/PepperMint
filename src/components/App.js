@@ -33,6 +33,16 @@ const App = () => {
 //We would need to develop each component to have childs obviously, we need to talk about each components structure, see Shared Layout for example
 //
 
+// const App = () => {
+    
+//   return (
+//       <>
+//       <h1>PepperMint</h1>
+//       <Login/>
+//       <Signup/>
+//       </>
+//     );
 
+// }
 
 export default App;
