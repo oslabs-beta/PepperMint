@@ -5,10 +5,8 @@ import Signup from './Signup';
 import TemplateLanding from './TemplateLanding'
 import TemplateHome from './TemplateHome'
 import CreateTemplate from './CreateTemplate'
-import SharedLayout from './SharedLayout'
+import SharedLayout from './SharedLayout/SharedLayout'
 
-import Navbar from './SharedLayout/Navbar';
-import Footer from './SharedLayout/Footer';
 
 
 const App = () => {
