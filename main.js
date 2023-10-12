@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const { app, ipcMain, BrowserWindow } = require('electron');
 const path = require('path');
 
 const isDev = !app.isPackaged;
@@ -25,6 +25,29 @@ if (isDev) {
   })
 }
 
+ipcMain.on('loginAttempt', async (event, credentials) => {
+  console.log(credentials);
+  // try{
+  //   //find profile with same username
+  //   // const profile = await Profile.findOne({username: req.body.username});
+  //   if (profile === null || profile.password !== req.body.password){
+  //   }
+  //   else {
+  //     mainWindow.webContents.send(‘profileData’, profile);
+  //   }
+  // }
+
+  event.sender.send('loginAttempt', 
+      {
+        username: 'Will',
+        password: 'codesmith'
+      }
+    );
+})
+
+// ipcMain.on('loginAttempt', (_, credentials) => {
+//   console.log(credentials);
+// })
 
 app.whenReady().then(createMainWindow)
 
