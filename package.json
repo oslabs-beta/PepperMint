@@ -15,7 +15,8 @@
     "electron": "^27.0.0",
     "path": "^0.12.7",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.16.0"
   },
   "devDependencies": {
     "@babel/core": "^7.23.0",
