@@ -10,7 +10,7 @@ function Footer() {
             <nav>
                 <ul>
                     <li><Link to="/about">About Us</Link></li>
-                    <li><Link to="/terms">Terms & Conditions</Link></li>
+                    <li><Link to="/terms">Terms & Conditions</Link></li> 
                     <li><Link to="/contact">Contact Us</Link></li>
                 </ul>
             </nav>

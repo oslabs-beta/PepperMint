@@ -2,17 +2,23 @@
 import React, { useState } from 'react';
 // import { ipcRenderer } from 'electron';
 // electron.ipcMain.on('test-event', () => console.log('lol'));
+import { useNavigate } from 'react-router-dom';
+
 
 const Login = () => {
-
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+
 
   // ipcRenderer.on('test-event', this.handler);
 
   async function handleClick() {
     let test = await electron.authApi.sendCredentials({username: username, password: password, kind: 'login'});
-    console.log('test', test);
+    console.log('test', test)
+    if(test === 'haha') {
+      navigate('signup');
+    }
   }
 
   return (
