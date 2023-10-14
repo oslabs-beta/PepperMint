@@ -1,10 +1,19 @@
+// import { ipcRenderer } from 'electron';
 import React, { useState } from 'react';
-
+// import { ipcRenderer } from 'electron';
+// electron.ipcMain.on('test-event', () => console.log('lol'));
 
 const Login = () => {
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
+  // ipcRenderer.on('test-event', this.handler);
+
+  async function handleClick() {
+    let test = await electron.authApi.sendCredentials({username: username, password: password, kind: 'login'});
+    console.log('test', test);
+  }
 
   return (
     <>
@@ -24,9 +33,7 @@ const Login = () => {
       </div>
 
       <div>
-        <button onClick={() => { 
-          electron.authApi.sendCredentials({username: username, password: password, kind: 'login'})
-          }}> Submit </button>
+        <button onClick={handleClick}> Submit </button>
       </div>
 
     </>
