@@ -5,7 +5,7 @@ function Footer() {
     return (
         <footer>
             <div>
-                &copy; {new Date().getFullYear()} Your App Name
+                &copy; {new Date().getFullYear()} PepperMint
             </div>
             <nav>
                 <ul>
