@@ -1,31 +1,31 @@
 import React from 'react';
-import { Route, BrowserRouter, Routes } from 'react-router-dom';
+import { Route, HashRouter, Routes } from 'react-router-dom';
 import Login from './Login';
 import Signup from './Signup';
-import TemplateLanding from './TemplateLanding'
-import TemplateHome from './TemplateHome'
-import CreateTemplate from './CreateTemplate'
-import SharedLayout from './SharedLayout/SharedLayout'
+// import TemplateLanding from './TemplateLanding'
+// import TemplateHome from './TemplateHome'
+// import CreateTemplate from './CreateTemplate'
+// import SharedLayout from './SharedLayout/SharedLayout'
 
 
 
 const App = () => {
     return (
-        <BrowserRouter>
+        <HashRouter>
             <Routes>
-                <Route path='/' element={<SharedLayout />}>
+                {/* <Route path='/' element={<SharedLayout />}> */}
                     //shared layout needs to have navbar component, and footer component, with Links within it, as well as Outlet
-                    <Route index element={<Login />} />
+                    <Route path = "/" element={<Login />} />
                     <Route path='signup' element={<Signup />} />
-                    <Route path='templatelanding' element={<TemplateLanding />} />
+                    {/* <Route path='templatelanding' element={<TemplateLanding />} />
                         //will render all child components of this page, talk to nassim
                     <Route path='templatehome' element={<TemplateHome />} />
                         //will render all child components of this page, talk to nassim
                     <Route path='createtemplate' element={<CreateTemplate />} />
-                        //will render all child components of this page, talk to nassim
-                </Route>
+                        //will render all child components of this page, talk to nassim */}
+                {/* </Route> */}
             </Routes>
-        </BrowserRouter>
+        </HashRouter>
     )
 };
 
