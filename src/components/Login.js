@@ -16,8 +16,14 @@ const Login = () => {
   async function handleClick() {
     let test = await electron.authApi.sendCredentials({username: username, password: password, kind: 'login'});
     console.log('test', test)
-    if(test === 'haha') {
-      navigate('/templatelanding');
+    if(test === 'login-successful') {
+      navigate('signup');
+    }
+    else if(test === 'wrong-username'){
+      console.log('WRONG USERNAME')
+    }
+    else if(test === 'wrong-password'){
+      console.log('WRONG PASSWORD')
     }
   }
 
