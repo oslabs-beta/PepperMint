@@ -29,7 +29,7 @@ if (isDev) {
 ipcMain.handle('loginAttempt', async (event, credentials) => {
   try{
     const user = await User.findOne({username: credentials.username});
-    console.log(user);
+    console.log(credentials);
     if(user === null){
       return 'wrong-username';
     }

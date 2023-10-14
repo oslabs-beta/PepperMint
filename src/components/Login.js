@@ -17,7 +17,7 @@ const Login = () => {
     let test = await electron.authApi.sendCredentials({username: username, password: password, kind: 'login'});
     console.log('test', test)
     if(test === 'login-successful') {
-      navigate('signup');
+      navigate('/templatelanding');
     }
     else if(test === 'wrong-username'){
       console.log('WRONG USERNAME')

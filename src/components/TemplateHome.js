@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const TemplateHome = () => {
 
@@ -8,6 +8,13 @@ const TemplateHome = () => {
     return (
         <>
         <h1>Template Home</h1>
+        <div>
+        <Link to="/createtemplate"><button>Edit Template</button></Link>
+        </div>
+
+        <div>
+            <button> Deploy Template</button>
+        </div>
         </>
         
     )

@@ -10,12 +10,16 @@ const TemplateLanding = () => {
 
             <h1>Welcome to PepperMint, *Enter Username here*</h1>
             <div>
-            <Link to="/templatehome"><button>Template Home Page</button></Link>
-            </div>
-
-            <div>
             <Link to="/createtemplate"><button>Create A New Template!</button></Link>
             </div>
+            <div>
+            <Link to="/templatehome"><button>Template X</button></Link>
+            </div>
+            <div>
+            <Link to="/templatehome"><button>Template Y</button></Link>
+            </div>
+
+           
         </>
         
         
