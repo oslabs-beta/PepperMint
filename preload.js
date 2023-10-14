@@ -3,7 +3,7 @@ const { ipcRenderer, contextBridge } = require('electron');
 contextBridge.exposeInMainWorld('electron', {
   authApi: {
     sendCredentials(credentials) {
-      ipcRenderer.send('loginAttempt', credentials);
+      return ipcRenderer.invoke('loginAttempt', credentials);
     }
   }
 })

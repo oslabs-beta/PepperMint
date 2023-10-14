@@ -25,8 +25,11 @@ if (isDev) {
   })
 }
 
-ipcMain.on('loginAttempt', async (event, credentials) => {
+ipcMain.handle('loginAttempt', async (event, credentials) => {
+  
   console.log(credentials);
+  return 'haha';
+  // event.reply('test-event');
   // try{
   //   //find profile with same username
   //   // const profile = await Profile.findOne({username: req.body.username});
@@ -37,12 +40,14 @@ ipcMain.on('loginAttempt', async (event, credentials) => {
   //   }
   // }
 
-  event.sender.send('loginAttempt', 
-      {
-        username: 'Will',
-        password: 'codesmith'
-      }
-    );
+  // event.send('test-event');
+
+  // event.reply('loginAttempt', 
+  //     {
+  //       username: 'Will',
+  //       password: 'codesmith'
+  //     }
+  //   );
 })
 
 // ipcMain.on('loginAttempt', (_, credentials) => {
