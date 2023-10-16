@@ -45,7 +45,7 @@ body {
     display: flex;
     justify-content: center;
 }
-footer{
+footer {
     position: absolute;
     bottom: 0;
     width: 100%;
@@ -55,3 +55,4 @@ footer{
     align-items: center;
     
 }
+
