@@ -1,20 +1,18 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 
-const CreateTemplate = () => {
-
-
+const CreateTemplate = (props) => {
 
     return (
         <>
-
             <h1>Create Template</h1>
-            <div>
-            <Link to="/templatehome"><button>Save Your Template!</button></Link>
-            </div>
+            <form>
+                <input type="text" placeholder="Name" />
+                <input type="text" placeholder="Insert template" />
+                <Link to="/templatehome"><button type='submit'>Save Your Template!</button></Link>
+            </form>
         </>
-        
-        
+
     )
 }
 

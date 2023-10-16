@@ -6,6 +6,7 @@ const TemplateHome = () => {
 
 
     return (
+        //reference setCurrentTemplate state, and render 
         <>
         <h1>Template Home</h1>
         <div>
