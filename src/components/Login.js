@@ -28,27 +28,32 @@ const Login = () => {
   }
 
   return (
-    <>
+    <div class="outer-box">
 
-      <div>
-        <label>
-          Username
-          <input type='text' value={username} onChange={(keystroke) => setUsername(keystroke.target.value)}/>
-        </label>
+      <div className = 'title'><h1 id = "title">PepperMint</h1></div>
+      
+      <div className="centered-box">
+        <div>
+          <label>
+            Username
+            <input type='text' value={username} onChange={(keystroke) => setUsername(keystroke.target.value)}/>
+          </label>
+        </div>
+
+        <div>
+          <label>
+            Password 
+            <input type='password' value = {password} onChange={(keystroke) => setPassword(keystroke.target.value)}/>
+          </label>
+        </div>
+
+        <div>
+          <button onClick={handleClick}> Submit </button>
+        </div>
       </div>
+      
 
-      <div>
-        <label>
-          Password 
-          <input type='password' value = {password} onChange={(keystroke) => setPassword(keystroke.target.value)}/>
-        </label>
-      </div>
-
-      <div>
-        <button onClick={handleClick}> Submit </button>
-      </div>
-
-    </>
+    </div>
   )
 }
 

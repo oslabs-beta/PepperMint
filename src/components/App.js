@@ -11,16 +11,27 @@ import CreateTemplate from './CreateTemplate'
 import '../styles.css'
 
 const App = () => {
+    // const[currentTemplate, setCurrentTemplate] = useState({name: '', template: ''});
+
+    // const handleTemplateSubmission = (event) => {
+    //     const { name, value } = event.target;
+    //     setCurrentTemplate({})
+    //     //setCurrentTemplate depending on save
+    //     //send Fetch to the DB
+    // }
+
+        
+
     return (
         <>
         <HashRouter>
             <Navbar/>
             <Routes>
-                    <Route path = "/" element={<Login />} />
-                    <Route path='signup' element={<Signup />} />
-                    <Route path='/templatelanding' element={<TemplateLanding />} />
-                    <Route path='/templatehome' element={<TemplateHome />} />
-                    <Route path='/createtemplate' element={<CreateTemplate />} />
+                <Route path = "/" element={<Login />} />
+                <Route path='signup' element={<Signup />} />
+                <Route path='/templatelanding' element={<TemplateLanding />} />
+                <Route path='/templatehome' element={<TemplateHome />} />
+                <Route path='/createtemplate' element={<CreateTemplate />} />
             </Routes>
             <Footer/>
         </HashRouter>

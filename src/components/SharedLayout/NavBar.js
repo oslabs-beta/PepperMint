@@ -5,7 +5,7 @@ function Navbar() {
     return (
         <header>
             <nav>
-                <ul>
+                <ul className="horizontal-links">
                     <li>Peppermint</li>
                     <li><Link to="/templatelanding">Template Landing</Link></li>
                 </ul>
