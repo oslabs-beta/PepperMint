@@ -1,50 +1,54 @@
 @import url('https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Inknut+Antiqua:wght@300&family=Oswald:wght@200;300;400;500;600;700&family=Righteous&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Dosis:wght@300&family=Inknut+Antiqua:wght@300&family=Oswald:wght@200;300;400;500;600;700&family=Righteous&display=swap');
 
 #title {
     font-family: 'Righteous';
-    font-size: 36px; 
+    font-size: 24px;
     text-align: center;
-    margin-bottom: 20px; 
+    margin-bottom: 10px;
     color: white;
 }
 
-.outer-box{
+.outer-box {
     display: flex;
     justify-content: center;
     align-items: center;
 
 }
- .title, .centered-box{
-    flex: 1; /* Grow and take up equal vertical space */
-    padding: 10px;
+
+.title,
+.centered-box {
+    flex: 1;
+    padding: 5px;
 }
 
-.horizontal-links{
+.horizontal-links {
     display: flex;
     flex-flow: row;
-    justify-content: space-between;
+    justify-content: space-around;
     width: 100%;
 }
-.horizontal-links > li{
-    list-style: none
+
+.horizontal-links>li {
+    list-style: none;
+    font-size: 20px;
 }
 
 
 body {
     background-color: #0285cd;
     display: flex;
-    flex-direction: column; /* Stack the child elements vertically */
+    flex-direction: column;
+    font-family: 'Dosis';
+    color: white;
 }
 
-.footer-nav{
-    border: solid 1px black;
-  
-}
 
-.centered{
+.centered {
     display: flex;
     justify-content: center;
 }
+
 footer {
     position: absolute;
     bottom: 0;
@@ -53,6 +57,144 @@ footer {
     flex: column;
     justify-content: center;
     align-items: center;
-    
 }
 
+.PageTitles {
+    display: flex;
+    justify-content: center;
+}
+
+#CreateTemplateColumns {
+    display: flex;
+}
+
+
+#CreateTemplateColumnOne {
+    flex: 2;
+    border: 5px solid navy;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+}
+
+#CreateTemplateColumnTwo {
+    flex: 1;
+    border: 5px solid navy;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    font-size: 20px;
+}
+
+#CreateTemplateColumnOne,
+#CreateTemplateColumnTwo {
+    width: 100%;
+    height: 600px;
+    background-color: #8cb3e6;
+}
+
+#createTemplateSubmit {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    padding: 10px;
+}
+
+#CreateTemplateColumnOne label {
+    margin-bottom: 10px;
+}
+
+.input-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 5px;
+}
+
+.input-container label {
+    margin-bottom: 5px;
+    /* Optional: Adds space between labels and inputs */
+}
+
+#subsection1 {
+    flex: 0 0 auto;
+    /* Fixed height for the topmost subsection */
+    padding: 20px;
+    /* Add padding as needed */
+}
+
+#subsection2,
+#subsection3 {
+    flex: 1;
+    /* Distribute remaining space evenly among subsections 2 and 3 */
+    padding: 20px;
+    /* Add padding as needed */
+}
+
+#templateProps {
+    height: 100px;
+    width: 200px;
+
+}
+
+.footer-links {
+    display: flex;
+    flex-flow: row;
+    justify-content: flex-start;
+    width: 100%;
+    list-style: none;
+    font-size: 20px;
+}
+
+/* Style for the dropdown button */
+.dropbtn {
+    background-color: #3498db;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+/* Style for the dropdown container */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Style for the dropdown content (hidden by default) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+/* Style for the dropdown content links */
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Style for the dropdown content links on hover */
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
+
+/* Show the dropdown content when the dropdown button is clicked */
+.show {
+    display: block;
+}
+
+#componentWindow {
+    border-bottom: 5px solid aqua;
+    flex: 1;
+}
+
+#templatePreviewWindow {
+    border-top: 5px solid black;
+    flex: 2
+}
