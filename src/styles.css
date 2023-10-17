@@ -35,3 +35,11 @@
   border-bottom-left-radius: .5rem;
   overflow: hidden;
 }
+
+.display-flex{
+  display: flex;
+}
+
+.flex-1{
+  flex: 1;
+}
