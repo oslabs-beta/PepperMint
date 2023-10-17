@@ -11,9 +11,15 @@ const CreateTemplate = (props) => {
     // const beforeAll = `beforeAll(() => {\n\n})\n\n`
     // const test = `test('', => {\n\n})\n\n}`
 
+    function insertIndexOne(arr, elem) {
+     
+        arr.splice(1, 0, elem);
+         
+        return arr;
+    }
 
     const codeTemplateObj = {
-        imports: ['import React from \'react\'', 'import AComponent from \'./aDirectory/AComponent\''],
+        imports: ['import React from react\n', 'import AComponent from ./aDirectory/AComponent\n\n'],
         describe: {
             mock: {
                 
@@ -21,21 +27,20 @@ const CreateTemplate = (props) => {
             props: {
 
             },
-            beforeAll: {
-
-            },
+            beforeAll: ['beforeAll(() => {\n' , '});\n\n'],
             tests: [['expect()','expect()','expect()'], 
                     ['expect()','expect()','expect()'], 
                     ['expect()','expect()','expect()']]
         }
     }
 
-
-
-    const [javascript, setJs] = useState(imports + describe + beforeAll + test);
+    const arr = []
+    const [javascript, setJs] = useState(codeTemplateObj.imports + codeTemplateObj.describe.beforeAll + codeTemplateObj.describe.tests);
 
     const handleInsertBefore = () => {
-        setJs(`console.log('lol')\n` + javascript);
+        insertIndexOne(codeTemplateObj.describe.beforeAll, 'text = render(<LabeledText {...props} />);\n');
+        console.log(codeTemplateObj.describe.beforeAll)
+        setJs(codeTemplateObj.imports + codeTemplateObj.describe.beforeAll + codeTemplateObj.describe.tests);
     }
 
     const handleInsertAfter = () => {
