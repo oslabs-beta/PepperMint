@@ -20,6 +20,10 @@ const CreateTemplate = (props) => {
         setUserProps(event.value);
     }
 
+    const describe = (string) => {
+        return string
+
+    }
     const componentParsing = () => {
 
         const componentInputElement = document.getElementById('componentWindowTextInput');
@@ -32,9 +36,6 @@ const CreateTemplate = (props) => {
             setUserProps(newUserProps);
 
             console.log(newUserProps)
-
-            //parse then runs the paring code
-            //then populates the box with props
         }
 
     }
@@ -79,22 +80,23 @@ const CreateTemplate = (props) => {
                         </form>
 
                         <form id="subsection3">
-                            <label for="testCount">Enter Number of Tests:</label>
+                            <label for="testCount">Enter Number of Individual Tests:</label>
                             <input type="number" id="testCount" placeholder="0" min="1" />
                             <br></br>
                             <br></br>
-                            <label for="assertionCount"> Enter Number of Assertions:</label>
+                            <label for="assertionCount"> Enter Number of Assertions (expect statements):</label>
                             <input type="number" id="assertionCount" placeholder="0" min="1" />
                         </form>
 
                     </form>
+                    <Link to="/templateHome"><button id="bigSaveTemplateButton">Save Template</button></Link>
                 </div>
 
                 <div id="CreateTemplateColumnTwo">
                     <div id="componentWindow"> Component Window</div>
                     <textarea id="componentWindowTextInput" placeholder='Insert Component Text Here...' />
                     <div id="templatePreviewWindow">Template Preview</div>
-                    <textarea id="templatePreviewWindowInput" />
+                    <textarea id="templatePreviewWindowInput" value = "describe()" />
 
                 </div>
             </div>
