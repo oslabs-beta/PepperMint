@@ -135,7 +135,7 @@ footer {
 #templateProps {
     height: 100px;
     width: 200px;
-    background-color: black;
+    background-color: navy;
     color: white;
 
 }
@@ -215,6 +215,6 @@ button {
     direction: ltr;
     text-align: left;
     vertical-align: top;
-    background-color: black;
-    color: white;
+    background-color: navy;
+    color: pink;
 }

@@ -16,6 +16,10 @@ const CreateTemplate = (props) => {
         setIsDropdownOpen(!isDropdownOpen);
     }
 
+    const handleChange = (event) => {
+        setUserProps(event.value);
+    }
+
     const componentParsing = () => {
 
         const componentInputElement = document.getElementById('componentWindowTextInput');
@@ -32,6 +36,7 @@ const CreateTemplate = (props) => {
             //parse then runs the paring code
             //then populates the box with props
         }
+
     }
 
 
@@ -70,7 +75,7 @@ const CreateTemplate = (props) => {
                             <label for="html">Yes</label>
                             <br></br>
                             <br></br>
-                            <textarea id="templateProps" value={userProps} placeholder="Props Will Populate Here" />
+                            <textarea id="templateProps" value={userProps} onChange = {handleChange} placeholder="Props Will Populate Here" />
                         </form>
 
                         <form id="subsection3">
