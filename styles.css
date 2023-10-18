@@ -3,7 +3,7 @@
 
 #title {
     font-family: 'Righteous';
-    font-size: 24px;
+    font-size: 48px;
     text-align: center;
     margin-bottom: 10px;
     color: white;
@@ -41,6 +41,8 @@ body {
     flex-direction: column;
     font-family: 'Dosis';
     color: white;
+    overflow-x: hidden;
+    /* Prevent horizontal scrolling */
 }
 
 
@@ -79,7 +81,7 @@ footer {
 }
 
 #CreateTemplateColumnTwo {
-    flex: 1;
+    flex: 4;
     border: 5px solid navy;
     display: flex;
     flex-direction: column;
@@ -113,7 +115,6 @@ footer {
 
 .input-container label {
     margin-bottom: 5px;
-    /* Optional: Adds space between labels and inputs */
 }
 
 #subsection1 {
@@ -125,7 +126,7 @@ footer {
 
 #subsection2,
 #subsection3 {
-    flex: 1;
+    flex: 2;
     /* Distribute remaining space evenly among subsections 2 and 3 */
     padding: 20px;
     /* Add padding as needed */
@@ -153,12 +154,14 @@ footer {
     padding: 10px;
     border: none;
     cursor: pointer;
+    border-radius: 10%;
 }
 
 /* Style for the dropdown container */
 .dropdown {
     position: relative;
-    display: inline-block;
+    display: flex;
+    justify-content: space-around;
 }
 
 /* Style for the dropdown content (hidden by default) */
@@ -190,11 +193,26 @@ footer {
 }
 
 #componentWindow {
-    border-bottom: 5px solid aqua;
     flex: 1;
 }
 
 #templatePreviewWindow {
     border-top: 5px solid black;
     flex: 2
+}
+
+button {
+    font-family: 'Dosis';
+}
+
+#componentWindowTextInput,
+#templatePreviewWindowInput {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    direction: ltr;
+    text-align: left;
+    /* Set text alignment to left */
+    vertical-align: top;
+    /* Set vertical alignment to top */
 }
