@@ -15,10 +15,12 @@ const Login = () => {
 
   async function handleClick() {
     let test = await electron.authApi.sendCredentials({username: username, password: password, kind: 'login'});
+    let count = await electron.authApi.getCount(username);
     console.log('test', test)
     if(test === 'login-successful') {
       // Saves the username to session storage
       window.sessionStorage.setItem("username", username)
+      window.sessionStorage.setItem("count", count)
       navigate('/templatelanding');
     }
     else if(test === 'wrong-username'){

@@ -58,19 +58,23 @@ ipcMain.handle('signupAttempt',  async (event, credentials) => {
 ipcMain.handle('increment', async (event, username) => {
   try{
     let newCount = await Count.findOne({username: username})
-    console.log("newCount: ", newCount);
-    if(newCount === null){
-      await Count.create({username: username})
-      return 0;
-    }
-    else{
-      await Count.findOneAndUpdate({username: username}, {count: ++newCount.count})
-      return newCount;
-    }
+    await Count.findOneAndUpdate({username: username}, {count: ++newCount.count})
+    return newCount.count;
+  
   }
   catch(err){
     console.log('ERROR AT INCREMENT: ', err);
   }
+})
+
+ipcMain.handle('getCount', async (event, username) => {
+  let newCount = await Count.findOne({username: username});
+  console.log("USERNAME: ", username);
+  if(newCount === null){
+    await Count.create({username: username})
+    return 0;
+  }
+  return newCount.count;
 })
 
 app.whenReady().then(createMainWindow)

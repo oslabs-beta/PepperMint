@@ -10,6 +10,9 @@ contextBridge.exposeInMainWorld('electron', {
     },
     increment(username){
       return ipcRenderer.invoke('increment', username);
+    },
+    getCount(username){
+      return ipcRenderer.invoke('getCount', username);
     }
   }
 })
