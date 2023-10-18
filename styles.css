@@ -135,6 +135,8 @@ footer {
 #templateProps {
     height: 100px;
     width: 200px;
+    background-color: black;
+    color: white;
 
 }
 
@@ -212,7 +214,7 @@ button {
     box-sizing: border-box;
     direction: ltr;
     text-align: left;
-    /* Set text alignment to left */
     vertical-align: top;
-    /* Set vertical alignment to top */
+    background-color: black;
+    color: white;
 }

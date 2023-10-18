@@ -1,101 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import parse from './propParser2.js';
 
-const LabeledText = ({ label, text }) => {
-    const idk = false;
-
-    return (
-        <p>
-            <strong>{`${label}: `}</strong>
-            {text}
-        </p>
-    )
-    
-};
-
-const LabeledText2 = (props) => {
-    const idk = false;
-
-    return (
-        <p>
-            <strong>{`${props.label}: `}</strong>
-            {props.text}
-        </p>
-    )
-    
-};
-
-// function searchProps(component){
-    
-
-//      let i = 0;
-
-//      const props = {};
-
-//      while (i < component.length){
-
-//         let propAndI;
-
-//         if (component.slice(i, i+6) === 'props.') {
-
-//             propAndI = getProp(component.slice(i+6))
-
-//             props[propAndI[0]] = '';
-//             i += propAndI[1];
-//         }
-//         else{
-//             i++;
-//         }
-       
-
-//      }
-//      return props;
-
-// }
-
-// function getProp(propAndRest){
-    
-//     let newString = '';
-//     let i = 0;
-//     while (i < propAndRest.length && /^[a-zA-Z0-9]+$/.test(propAndRest[i])){
-//         newString += propAndRest[i];
-//     }
-//     return [newString, i];
- 
-// }
-
-// function parse(component){
-//     console.log('inside searchProps')
-
-//     if ('props'.startsWith('props')) return searchProps(component);
-
-// }
-
-// parse(LabeledText2.toString());
-console.log(LabeledText.toString())
-console.log(LabeledText2.toString())
-
+console.log(parse)
 const CreateTemplate = (props) => {
-    
-
-    
-
     
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [componentInputCode, setComponentInputCode] = useState('');
+    const [userProps, setUserProps] = useState('');
+
 
 
     const toggleDropdown = () => {
         setIsDropdownOpen(!isDropdownOpen);
     }
 
-    const parse = () => {
+    const componentParsing = () => {
 
         const componentInputElement = document.getElementById('componentWindowTextInput');
         if (componentInputElement) {
             setComponentInputCode(componentInputElement.value);
             console.log('Component Input code:', componentInputCode);
+
+            let newUserProps = JSON.stringify(parse(componentInputCode));
+
+            setUserProps(newUserProps);
+
+            console.log(newUserProps)
 
             //parse then runs the paring code
             //then populates the box with props
@@ -112,7 +44,7 @@ const CreateTemplate = (props) => {
                     <form>
 
                         <form id="subsection1">
-                            <label for="templateName">Template Name:</label>
+                            <label htmlFor="templateName">Template Name:</label>
                             <input type="text" id="templateName" placeholder="Name" />
 
                             <br></br>
@@ -126,7 +58,7 @@ const CreateTemplate = (props) => {
                                     <a href="#comp2">Component 2</a>
                                     <a href="#comp3">Component 3</a>
                                 </div>
-                                <button onClick={parse} className="dropbtn">Parse Component</button>
+                                <button onClick={componentParsing} className="dropbtn">Parse Component</button>
                             </div>
 
 
@@ -138,7 +70,7 @@ const CreateTemplate = (props) => {
                             <label for="html">Yes</label>
                             <br></br>
                             <br></br>
-                            <input type="text" id="templateProps" placeholder="Props Will Populate Here" />
+                            <textarea id="templateProps" value={userProps} placeholder="Props Will Populate Here" />
                         </form>
 
                         <form id="subsection3">
@@ -155,9 +87,9 @@ const CreateTemplate = (props) => {
 
                 <div id="CreateTemplateColumnTwo">
                     <div id="componentWindow"> Component Window</div>
-                    <input type="text" id="componentWindowTextInput" placeholder='Insert Component Text Here...' />
+                    <textarea id="componentWindowTextInput" placeholder='Insert Component Text Here...' />
                     <div id="templatePreviewWindow">Template Preview</div>
-                    <input type="text" id="templatePreviewWindowInput" />
+                    <textarea id="templatePreviewWindowInput" />
 
                 </div>
             </div>
