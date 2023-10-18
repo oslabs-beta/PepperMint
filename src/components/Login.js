@@ -17,6 +17,8 @@ const Login = () => {
     let test = await electron.authApi.sendCredentials({username: username, password: password, kind: 'login'});
     console.log('test', test)
     if(test === 'login-successful') {
+      // Saves the username to session storage
+      window.sessionStorage.setItem("username", username)
       navigate('/templatelanding');
     }
     else if(test === 'wrong-username'){

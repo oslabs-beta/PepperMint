@@ -1,6 +1,7 @@
 const { app, ipcMain, BrowserWindow } = require('electron');
 const path = require('path');
 const User = require('./models/UserModel');
+const Count = require('./models/CountModel');
 
 const isDev = !app.isPackaged;
 
@@ -20,6 +21,7 @@ function createMainWindow() {
   win.loadFile('index.html');
 }
 
+
 if (isDev) {
   require('electron-reload')(__dirname, {
     electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
@@ -37,25 +39,6 @@ ipcMain.handle('loginAttempt', async (event, credentials) => {
       return 'wrong-password';
     }
     return 'login-successful';
-    // event.reply('test-event');
-    // try{
-    //   //find profile with same username
-    //   // const profile = await Profile.findOne({username: req.body.username});
-    //   if (profile === null || profile.password !== req.body.password){
-    //   }
-    //   else {
-    //     mainWindow.webContents.send(‘profileData’, profile);
-    //   }
-    // }
-
-    // event.send('test-event');
-
-    // event.reply('loginAttempt', 
-    //     {
-    //       username: 'Will',
-    //       password: 'codesmith'
-    //     }
-    //   );
   }
   catch(err){
     console.log('ERROR AT LOGIN: ', err);
@@ -72,9 +55,23 @@ ipcMain.handle('signupAttempt',  async (event, credentials) => {
   }
 })
 
-// ipcMain.on('loginAttempt', (_, credentials) => {
-//   console.log(credentials);
-// })
+ipcMain.handle('increment', async (event, username) => {
+  try{
+    let newCount = await Count.findOne({username: username})
+    console.log("newCount: ", newCount);
+    if(newCount === null){
+      await Count.create({username: username})
+      return 0;
+    }
+    else{
+      await Count.findOneAndUpdate({username: username}, {count: ++newCount.count})
+      return newCount;
+    }
+  }
+  catch(err){
+    console.log('ERROR AT INCREMENT: ', err);
+  }
+})
 
 app.whenReady().then(createMainWindow)
 

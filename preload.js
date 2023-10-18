@@ -7,6 +7,9 @@ contextBridge.exposeInMainWorld('electron', {
     },
     submitCredentials(credentials) {
       return ipcRenderer.invoke('signupAttempt', credentials);
+    },
+    increment(username){
+      return ipcRenderer.invoke('increment', username);
     }
   }
 })
