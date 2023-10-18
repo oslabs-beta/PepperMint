@@ -40,7 +40,19 @@ const CreateTemplate = (props) => {
 
     }
 
-
+    const readFile = (event) => {
+        let file = event.target.files[0];
+        let reader = new FileReader();
+        reader.readAsText(file);
+        let fileCode = "";
+        // reader.onload fires when a file is read successfully
+        reader.onload = function(event) {
+          // event.target.result holds the file code
+          fileCode = event.target.result;
+          console.log(fileCode)
+        };
+        return fileCode;
+      }
 
     return (
         <>
@@ -52,7 +64,7 @@ const CreateTemplate = (props) => {
                         <form id="subsection1">
                             <label htmlFor="templateName">Template Name:</label>
                             <input type="text" id="templateName" placeholder="Name" />
-
+                            <input type="file" onChange={readFile}></input>
                             <br></br>
                             <br></br>
                             <br></br>
