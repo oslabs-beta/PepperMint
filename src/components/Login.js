@@ -30,9 +30,10 @@ const Login = () => {
   return (
     <div class="outer-box">
 
-      <div className = 'title'><h1 id = "title">PepperMint</h1></div>
+      
       
       <div className="centered-box">
+        <div className = 'title'><h1 id = "title">PepperMint</h1></div>
         <div>
           <label>
             Username
