@@ -1,23 +1,40 @@
-//prop parser that parses through component definition
+//prop parser that parses through component syntax
 
 
 function parse(component){
-    //console.log('inside searchProps')
- 
-    if (component.startsWith('props')) return searchProps(component);
- 
+  
+
     let i = 0;
+    while (i < component.length){
+
+        if (component.slice(i).startsWith('(')){
+          return check(component.slice(i));
  
-    if (component.startsWith('_ref')){
- 
-     while (i < component.length){
-         if (component.slice(i).startsWith('var')){
-             return searchDesProps(component.slice(i+3));
-         }
-       i++;
-     }
+        }
+      i++;
+      
+      
     }
- }
+  return 'not a valid component'
+}
+
+function check(component){
+  let i = 0;
+  
+  while (i !== ')'){
+      const section = component.slice(i)
+      if (section.startsWith('props')){
+  
+          return searchProps(component.slice(i+4));
+      }
+      if (section.startsWith('{')){
+
+          return searchDesProps(component.slice(i));
+      }
+    i++;
+  }
+  
+}
  function searchProps(component){
      
      let i = 0;
@@ -45,16 +62,16 @@ function parse(component){
  }
  
  function getProp(propAndRest){
-  //console.log("got to getprop")
+
     
     let newString = '';
     let i = 0;
     while (i < propAndRest.length && /^[a-zA-Z0-9]+$/.test(propAndRest[i])){
-      //console.log(newString)
+
       newString += propAndRest[i];
       i++;
     }
-  //console.log("got through while")
+
     return [newString, i];
  
  }
@@ -63,7 +80,7 @@ function parse(component){
  
  function searchDesProps(component){
      let i = 0;
-   //console.log(component)
+
      while (i < component.length){
          if (component[i] === '{'){
              return parseObject(component.slice(i+1));
@@ -92,5 +109,6 @@ function parse(component){
  }
  
  
- console.log(parse('props => { var idk = false; return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("strong", null, "".concat(props.label, ": ")), props.text); }'));
- console.log(parse('_ref => {var {label, text} = _ref; var idk = false; return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("strong", null, "".concat(label, ": ")), text); }'));
+ console.log(parse('const LabeledText = ({ label, text }) => (<p><strong>{`${label}: `}</strong>{text}</p>);'));
+ console.log(parse('const LabeledText2 = (props) => (<p><strong>{`${props.label}: `}</strong>{props.text}</p>);'));
+
