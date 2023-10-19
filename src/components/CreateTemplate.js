@@ -34,7 +34,7 @@ const CreateTemplate = (props) => {
         '});'
     ];
 
-    const [document, setDoc] = useState('');
+    const [doc, setDoc] = useState('');
     const [selectorVal, setSelectorVal] = useState(1);
 
     const indices = [10, 15, 20, 23]
@@ -51,7 +51,7 @@ const CreateTemplate = (props) => {
     const handleInsert = (value, position) => {
         const numLines = value.split('\n').length;
 
-        document.replaceRange(value, { line: indices[position], char: 0 }, { line: indices[[position]], char: 0 })
+        doc.replaceRange(value, { line: indices[position], char: 0 }, { line: indices[[position]], char: 0 })
 
         if (position >= 3 && value.length < 16) indices.push(indices[position] + (numLines - 1));
         else {
@@ -62,7 +62,7 @@ const CreateTemplate = (props) => {
     }
 
     const handleDelete = (number, position) => {
-        document.replaceRange('\n', { line: indices[position] - number, char: 0 }, { line: indices[position], char: 0 })
+        doc.replaceRange('\n', { line: indices[position] - number, char: 0 }, { line: indices[position], char: 0 })
 
         for (let i = position; i < indices.length; i++) {
             indices[i] = indices[i] - (number - 1);
