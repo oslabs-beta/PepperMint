@@ -16,6 +16,7 @@
 .inner-box {
     display: flex;
     align-items: center;
+    justify-content: center;
     flex-direction: column;
 
 }
@@ -216,11 +217,15 @@ header {
 
 #componentWindow {
     flex: 1;
+    color: navy;
+    font-size: x-large;
 }
 
 #templatePreviewWindow {
     border-top: 5px solid black;
-    flex: 2
+    flex: 2;
+    color: navy;
+    font-size: x-large;
 }
 
 button {
@@ -243,5 +248,5 @@ button {
     position: absolute;
     bottom: 0;
     right: 0;
-    
+
 }
