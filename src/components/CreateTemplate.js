@@ -16,6 +16,14 @@ const CreateTemplate = (props) => {
         setIsDropdownOpen(!isDropdownOpen);
     }
 
+    const handleChange = (event) => {
+        setUserProps(event.value);
+    }
+
+    const describe = (string) => {
+        return string
+
+    }
     const componentParsing = () => {
 
         const componentInputElement = document.getElementById('componentWindowTextInput');
@@ -28,13 +36,23 @@ const CreateTemplate = (props) => {
             setUserProps(newUserProps);
 
             console.log(newUserProps)
-
-            //parse then runs the paring code
-            //then populates the box with props
         }
+
     }
 
-
+    const readFile = (event) => {
+        let file = event.target.files[0];
+        let reader = new FileReader();
+        reader.readAsText(file);
+        let fileCode = "";
+        // reader.onload fires when a file is read successfully
+        reader.onload = function(event) {
+          // event.target.result holds the file code
+          fileCode = event.target.result;
+          console.log(fileCode)
+        };
+        return fileCode;
+      }
 
     return (
         <>
@@ -46,7 +64,7 @@ const CreateTemplate = (props) => {
                         <form id="subsection1">
                             <label htmlFor="templateName">Template Name:</label>
                             <input type="text" id="templateName" placeholder="Name" />
-
+                            <input type="file" onChange={readFile}></input>
                             <br></br>
                             <br></br>
                             <br></br>
@@ -70,26 +88,27 @@ const CreateTemplate = (props) => {
                             <label for="html">Yes</label>
                             <br></br>
                             <br></br>
-                            <textarea id="templateProps" value={userProps} placeholder="Props Will Populate Here" />
+                            <textarea id="templateProps" value={userProps} onChange = {handleChange} placeholder="Props Will Populate Here" />
                         </form>
 
                         <form id="subsection3">
-                            <label for="testCount">Enter Number of Tests:</label>
+                            <label for="testCount">Enter Number of Individual Tests:</label>
                             <input type="number" id="testCount" placeholder="0" min="1" />
                             <br></br>
                             <br></br>
-                            <label for="assertionCount"> Enter Number of Assertions:</label>
+                            <label for="assertionCount"> Enter Number of Assertions (expect statements):</label>
                             <input type="number" id="assertionCount" placeholder="0" min="1" />
                         </form>
 
                     </form>
+                    <Link to="/templateHome"><button id="bigSaveTemplateButton">Save Template</button></Link>
                 </div>
 
                 <div id="CreateTemplateColumnTwo">
                     <div id="componentWindow"> Component Window</div>
                     <textarea id="componentWindowTextInput" placeholder='Insert Component Text Here...' />
                     <div id="templatePreviewWindow">Template Preview</div>
-                    <textarea id="templatePreviewWindowInput" />
+                    <textarea id="templatePreviewWindowInput" value = "describe()" />
 
                 </div>
             </div>
