@@ -8,24 +8,27 @@ import CodeWindow from './CodeWindow';
 console.log(parse)
 const CreateTemplate = (props) => {
 
+    let componentName = 'aComponent'
     const codeTemplate = [
         'import React from \'react\'',
         '\n',
-        'import AComponent from \'./aPath/to/aComponent\'',
+        'import aComponent from \'../client/components/aComponent\'',
         '\n',
         'import { render, screen, waitFor } from \'@testing-library/react\'',
         '\n\n',
-        'describe(\'Unit testing for AComponent\', () => {',
+        'describe(\'Unit testing for aComponent\', () => {',
         '\n\n',
-        'let AComponentMock;',
+        'let aComponentMock;',
         '\n\n',
         'const props = {',
         '\n\n\n',
         '}',
         '\n\n',
         'beforeAll(() => {',
-        '\n\n\n',
-        '});',
+        '\n\n',
+        'aComponentMock = render(<aComponent {...props}/>);',
+        '\n\n',
+        '}',
         '\n\n',
         'test(\'First test block:\'), () => {',
         '\n\n\n',
@@ -37,8 +40,7 @@ const CreateTemplate = (props) => {
     const [doc, setDoc] = useState('');
     const [selectorVal, setSelectorVal] = useState(1);
 
-    const indices = [10, 15, 20, 23]
-    const assertionIndices = [20]
+    const indices = [10, 15, 21, 24]
 
     const onMount = (editor) => {
         setDoc(editor);
@@ -53,12 +55,10 @@ const CreateTemplate = (props) => {
 
         doc.replaceRange(value, { line: indices[position], char: 0 }, { line: indices[[position]], char: 0 })
 
-        if (position >= 3 && value.length < 16) indices.push(indices[position] + (numLines - 1));
-        else {
-            for (let i = position; i < indices.length; i++) {
-                indices[i] = indices[i] + (numLines - 1);
-            }
+        for (let i = position; i < indices.length; i++) {
+            indices[i] = indices[i] + (numLines - 1);
         }
+
     }
 
     const handleDelete = (number, position) => {
@@ -71,6 +71,17 @@ const CreateTemplate = (props) => {
 
     const handleProps = (propName, addOrDel) => {
         (addOrDel === 'add') ? handleInsert(`${propName}: ''\n`, 0) : handleDelete(2, 0)
+    }
+
+    const addAllProps = () => {
+
+        const propsObj = Object.keys(JSON.parse(userProps));
+
+        for (let i = 0; i < propsObj.length; i++) {
+            if (i === propsObj.length - 1) handleInsert(`${propsObj[i]}: ''\n`, 0);
+            else handleInsert(`${propsObj[i]}: '',\n`, 0);
+        }
+
     }
 
     const handleRender = (value, position) => {
@@ -106,7 +117,7 @@ const CreateTemplate = (props) => {
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [componentInputCode, setComponentInputCode] = useState('');
-    const [userProps, setUserProps] = useState('');
+    const [userProps, setUserProps] = useState('{}');
     const [file, setFile] = useState('')
 
     const toggleDropdown = () => {
@@ -151,11 +162,9 @@ const CreateTemplate = (props) => {
         reader.onload = function (event) {
             // event.target.result holds the file code
             fileCode = event.target.result;
-            // console.log(fileCode)
-            // fileCode = ReactDOMServer.renderToString(fileCode)
+            componentName = (((fileCode.split('export default'))[1]).split(';'))[0];
             setFile(fileCode)
-            // console.log(ReactDOMServer.renderToString(file))
-            console.log(file);
+            doc.replaceRange((codeTemplate.join('')).replaceAll('aComponent', componentName.slice(1)), { line: 0, char: 0 }, { line: 0, char: 0 })
         };
 
     }
@@ -187,42 +196,42 @@ const CreateTemplate = (props) => {
                         </form>
 
                         <form id="subsection2">
-                            <label for="templateProps">Do You Want To Include Props?</label>
-                            <input type="radio" id="yesProps" name="yesProps" value="Yes" />
-                            <label for="html">Yes</label>
+                            <label> Add Props from Component File: </label>
                             <br></br>
                             <br></br>
                             <textarea id="templateProps" value={userProps} onChange={handleChange} placeholder="Props Will Populate Here" />
+                            <br></br>
+                            <button onClick={addAllProps}> Add these props </button>
                         </form>
 
                         <form id="subsection3">
-                            <button className="dropbtn" onClick={() => handleInsert()}>Generic Insert</button>
-                            <button className="dropbtn" onClick={() => handleDelete()}>Generic Delete</button>
-                            <button className="dropbtn" onClick={() => handleRender()}>Add Render</button>
-                            <br></br>
-                            <button className="dropbtn" onClick={() => handleProps('sampleProp', 'add')}>Add Prop</button>
-                            <button className="dropbtn" onClick={() => handleProps('sampleProp', 'delete')}>Delete Prop</button>
+                            <label> Add New Test Blocks: </label>
+                            <br />
+                            <br />
                             <button className="dropbtn" onClick={() => handleTests('add')}>Add Test</button>
                             <button className="dropbtn" onClick={() => handleTests('delete')}>Delete Test</button>
                         </form>
-                        <form>
+                        <form id="subsection4">
+                            <label> Add Assertion By Test #: </label>
+                            <br></br>
+                            <br></br>
                             <input type="number" value={selectorVal} onChange={(event) => setSelectorVal(event.target.value)} />
                             <button type="submit" className="dropbtn" value="Add Expect" onClick={(event) => handleAssertions(event.target.value)} >Add Expect</button>
                             <button type="submit" className="dropbtn" value="Delete Expect" onClick={(event) => handleAssertions(event.target.value)} >Delete Expect</button>
                         </form>
                     </form>
-                    <Link to="/templateHome"><button id="bigSaveTemplateButton">Save Template</button></Link>
+                    <Link to="/templateHome"><button className="dropbtn" id="bigSaveTemplateButton">Save Template</button></Link>
                 </div>
 
                 <div id="CreateTemplateColumnTwo">
-                    <div id="componentWindow" className="component-title"> Component Window</div>
+                    <div id="componentWindow" className="component-title">Component Window</div>
                     <textarea id="componentWindowTextInput" value={file} onChange={handleFileChange} placeholder='Insert Component Text Here...' />
                     <div id="templatePreviewWindow" className="component-title">Template Preview</div>
                     {/* <textarea id="templatePreviewWindowInput" /> */}
                     <div className='code-mirror-wrapper'>
                         <CodeWindow
-                            value={codeTemplate.join('')}
-                            displayName='Template Preview'
+                            value=''
+                            displayName=''
                             onMount={onMount}
                             onChange={valueCapture}
                         />

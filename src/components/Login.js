@@ -36,27 +36,28 @@ const Login = () => {
         <div className="centered-box">
           <div>
             <label>
-              Username: 
+              Username:
               <input type='text' value={username} onChange={(keystroke) => setUsername(keystroke.target.value)} />
             </label>
           </div>
 
           <div>
             <label>
-              Password: 
+              Password:
               <input type='password' value={password} onChange={(keystroke) => setPassword(keystroke.target.value)} />
             </label>
           </div>
 
           <div>
-            <button onClick={handleClick}> Submit </button>
+            <button onClick={handleClick}> Login </button>
+            <button> Sign Up </button>
           </div>
         </div>
 
 
       </div>
-  </div>
-    
+    </div>
+
   )
 }
 

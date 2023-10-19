@@ -154,13 +154,14 @@ header {
     /* Add padding as needed */
 }
 
-#subsection3 {
+#subsection4 {
     display: flex;
     justify-content: space-between;
 }
 
 #subsection2,
-#subsection3 {
+#subsection3,
+#subsection4 {
     flex: 2;
     /* Distribute remaining space evenly among subsections 2 and 3 */
     padding: 20px;
@@ -192,6 +193,7 @@ header {
     border: none;
     cursor: pointer;
     border: 1px solid white;
+
     border-radius: 5%;
 }
 
@@ -231,7 +233,7 @@ header {
 }
 
 #componentWindow {
-    flex: 2;
+    flex: 1;
     color: navy;
     font-size: x-large;
 }
@@ -250,7 +252,7 @@ button {
 #componentWindowTextInput {
     background-color: navy;
     color: pink;
-    height: 45%;
+    height: 50%;
     resize: none;
 }
 
@@ -266,5 +268,12 @@ button {
     position: absolute;
     bottom: 0;
     right: 0;
+    height: 100px;
+    width: 100px;
+    font-size: x-large;
+    margin: 1%;
+}
 
+.space {
+    height: 100px;
 }

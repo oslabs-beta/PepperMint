@@ -14,6 +14,7 @@ const TemplateLanding = () => {
         <>
 
             <h1>{window.sessionStorage.getItem("username")}</h1>
+            <div className = "space"></div>
             <div>
             <Link to="/createtemplate"><button>Create A New Template!</button></Link>
             </div>
