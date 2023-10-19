@@ -1,10 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Inknut+Antiqua:wght@300&family=Oswald:wght@200;300;400;500;600;700&family=Righteous&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Dosis:wght@300&family=Inknut+Antiqua:wght@300&family=Oswald:wght@200;300;400;500;600;700&family=Righteous&display=swap');
 
-#root{
+#root {
     height: 100vh;
-    width: 100vw;
 }
+
 #title {
     font-family: 'Righteous';
     font-size: 48px;
@@ -20,13 +20,14 @@
     flex-direction: column;
 
 }
-.outer-box{
+
+.outer-box {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
     height: 80%;
-    
+
 }
 
 .title,
@@ -54,8 +55,7 @@ body {
     flex-direction: column;
     font-family: 'Dosis';
     color: white;
-    overflow-x: hidden;
-    /* Prevent horizontal scrolling */
+    overflow: hidden;
 }
 
 
@@ -82,6 +82,10 @@ header {
     top: 0;
 }
 
+.name-template {
+    margin-bottom: 3%;
+}
+
 .PageTitles {
     display: flex;
     justify-content: center;
@@ -89,6 +93,7 @@ header {
 
 #CreateTemplateColumns {
     display: flex;
+    margin: 1%
 }
 
 
@@ -99,21 +104,25 @@ header {
     display: flex;
     flex-direction: row;
     height: 100%;
+
 }
 
 #CreateTemplateColumnTwo {
-    flex: 4;
+    flex: 2;
     border: 5px solid navy;
     display: flex;
     flex-direction: column;
-    text-align: center;
     font-size: 20px;
+}
+
+.component-title {
+    text-align: center;
 }
 
 #CreateTemplateColumnOne,
 #CreateTemplateColumnTwo {
     width: 100%;
-    height: 600px;
+    height: 80vh;
     background-color: #8cb3e6;
 }
 
@@ -143,6 +152,11 @@ header {
     /* Fixed height for the topmost subsection */
     padding: 20px;
     /* Add padding as needed */
+}
+
+#subsection3 {
+    display: flex;
+    justify-content: space-between;
 }
 
 #subsection2,
@@ -177,7 +191,8 @@ header {
     padding: 10px;
     border: none;
     cursor: pointer;
-    border-radius: 10%;
+    border: 1px solid white;
+    border-radius: 5%;
 }
 
 /* Style for the dropdown container */
@@ -216,14 +231,14 @@ header {
 }
 
 #componentWindow {
-    flex: 1;
+    flex: 2;
     color: navy;
     font-size: x-large;
 }
 
 #templatePreviewWindow {
     border-top: 5px solid black;
-    flex: 2;
+    flex: 1;
     color: navy;
     font-size: x-large;
 }
@@ -232,16 +247,19 @@ button {
     font-family: 'Dosis';
 }
 
-#componentWindowTextInput,
+#componentWindowTextInput {
+    background-color: navy;
+    color: pink;
+    height: 45%;
+    resize: none;
+}
+
 #templatePreviewWindowInput {
     width: 100%;
-    height: 100%;
     box-sizing: border-box;
     direction: ltr;
     text-align: left;
     vertical-align: top;
-    background-color: navy;
-    color: pink;
 }
 
 #bigSaveTemplateButton {
