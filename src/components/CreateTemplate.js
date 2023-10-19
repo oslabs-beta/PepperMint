@@ -168,10 +168,10 @@ const CreateTemplate = (props) => {
                     <form>
 
                         <form id="subsection1">
-                            <label htmlFor="templateName">Template Name:</label>
-                            <input type="text" id="templateName" placeholder="Name" />
-
-
+                            <div className="name-template">
+                                <label htmlFor="templateName">Template Name:</label>
+                                <input type="text" id="templateName" placeholder="Name" />
+                            </div>
                             <div className="dropdown">
                                 <input type="file" class="dropbtn" onChange={readFile} />
                                 <button onClick={toggleDropdown} className="dropbtn">Select Your Component</button>
@@ -196,22 +196,28 @@ const CreateTemplate = (props) => {
                         </form>
 
                         <form id="subsection3">
-                            <button onClick={() => handleInsert()}>Generic Insert</button>
-                            <button onClick={() => handleDelete()}>Generic Delete</button>
-                            <button onClick={() => handleRender()}>Add Render</button>
-                            <button onClick={() => handleProps('sampleProp', 'add')}>Add Prop</button>
-                            <button onClick={() => handleProps('sampleProp', 'delete')}>Delete Prop</button>
-                            <button onClick={() => handleTests('add')}>Add Test</button>
-                            <button onClick={() => handleTests('delete')}>Delete Test</button>
+                            <button className="dropbtn" onClick={() => handleInsert()}>Generic Insert</button>
+                            <button className="dropbtn" onClick={() => handleDelete()}>Generic Delete</button>
+                            <button className="dropbtn" onClick={() => handleRender()}>Add Render</button>
+                            <br></br>
+                            <button className="dropbtn" onClick={() => handleProps('sampleProp', 'add')}>Add Prop</button>
+                            <button className="dropbtn" onClick={() => handleProps('sampleProp', 'delete')}>Delete Prop</button>
+                            <button className="dropbtn" onClick={() => handleTests('add')}>Add Test</button>
+                            <button className="dropbtn" onClick={() => handleTests('delete')}>Delete Test</button>
+                        </form>
+                        <form>
+                            <input type="number" value={selectorVal} onChange={(event) => setSelectorVal(event.target.value)} />
+                            <button type="submit" className="dropbtn" value="Add Expect" onClick={(event) => handleAssertions(event.target.value)} >Add Expect</button>
+                            <button type="submit" className="dropbtn" value="Delete Expect" onClick={(event) => handleAssertions(event.target.value)} >Delete Expect</button>
                         </form>
                     </form>
                     <Link to="/templateHome"><button id="bigSaveTemplateButton">Save Template</button></Link>
                 </div>
 
                 <div id="CreateTemplateColumnTwo">
-                    <div id="componentWindow"> Component Window</div>
+                    <div id="componentWindow" className="component-title"> Component Window</div>
                     <textarea id="componentWindowTextInput" value={file} onChange={handleFileChange} placeholder='Insert Component Text Here...' />
-                    <div id="templatePreviewWindow">Template Preview</div>
+                    <div id="templatePreviewWindow" className="component-title">Template Preview</div>
                     {/* <textarea id="templatePreviewWindowInput" /> */}
                     <div className='code-mirror-wrapper'>
                         <CodeWindow
@@ -228,11 +234,11 @@ const CreateTemplate = (props) => {
                         <button onClick={() => handleTests('add')}>Add Test</button>
                         <button onClick={() => handleTests('delete')}>Delete Test</button> */}
                         <div>
-                            <form>
+                            {/* <form>
                                 <input type="number" value={selectorVal} onChange={(event) => setSelectorVal(event.target.value)} />
                                 <input type="submit" value="Add Expect" onClick={(event) => handleAssertions(event.target.value)} />
                                 <input type="submit" value="Delete Expect" onClick={(event) => handleAssertions(event.target.value)} />
-                            </form>
+                            </form> */}
 
                         </div>
                     </div>
