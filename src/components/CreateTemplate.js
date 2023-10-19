@@ -196,14 +196,14 @@ const CreateTemplate = (props) => {
                         </form>
 
                         <form id="subsection3">
-                            <label for="testCount">Enter Number of Individual Tests:</label>
-                            <input type="number" id="testCount" placeholder="0" min="1" />
-                            <br></br>
-                            <br></br>
-                            <label for="assertionCount"> Enter Number of Assertions (expect statements):</label>
-                            <input type="number" id="assertionCount" placeholder="0" min="1" />
+                            <button onClick={() => handleInsert()}>Generic Insert</button>
+                            <button onClick={() => handleDelete()}>Generic Delete</button>
+                            <button onClick={() => handleRender()}>Add Render</button>
+                            <button onClick={() => handleProps('sampleProp', 'add')}>Add Prop</button>
+                            <button onClick={() => handleProps('sampleProp', 'delete')}>Delete Prop</button>
+                            <button onClick={() => handleTests('add')}>Add Test</button>
+                            <button onClick={() => handleTests('delete')}>Delete Test</button>
                         </form>
-
                     </form>
                     <Link to="/templateHome"><button id="bigSaveTemplateButton">Save Template</button></Link>
                 </div>
@@ -220,13 +220,13 @@ const CreateTemplate = (props) => {
                             onMount={onMount}
                             onChange={valueCapture}
                         />
-                        <button onClick={() => handleInsert()}>Generic Insert</button>
+                        {/* <button onClick={() => handleInsert()}>Generic Insert</button>
                         <button onClick={() => handleDelete()}>Generic Delete</button>
                         <button onClick={() => handleRender()}>Add Render</button>
                         <button onClick={() => handleProps('sampleProp', 'add')}>Add Prop</button>
                         <button onClick={() => handleProps('sampleProp', 'delete')}>Delete Prop</button>
                         <button onClick={() => handleTests('add')}>Add Test</button>
-                        <button onClick={() => handleTests('delete')}>Delete Test</button>
+                        <button onClick={() => handleTests('delete')}>Delete Test</button> */}
                         <div>
                             <form>
                                 <input type="number" value={selectorVal} onChange={(event) => setSelectorVal(event.target.value)} />
