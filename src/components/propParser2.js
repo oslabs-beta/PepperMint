@@ -17,7 +17,7 @@ export default function parse(component){
       
       
     }
-  return 'not a valid component'
+  return {};
 
   function check(component){
     let i = 0;
