@@ -73,7 +73,8 @@ const CreateTemplate = (props) => {
         (addOrDel === 'add') ? handleInsert(`${propName}: ''\n`, 0) : handleDelete(2, 0)
     }
 
-    const addAllProps = () => {
+    const addAllProps = (event) => {
+        event.preventDefault();
 
         const propsObj = Object.keys(JSON.parse(userProps));
 
@@ -116,19 +117,22 @@ const CreateTemplate = (props) => {
 
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const [componentInputCode, setComponentInputCode] = useState('');
+ 
     const [userProps, setUserProps] = useState('{}');
     const [file, setFile] = useState('')
 
-    const toggleDropdown = () => {
+    const toggleDropdown = (event) => {
+        event.preventDefault();
         setIsDropdownOpen(!isDropdownOpen);
     }
 
     const handleChange = (event) => {
+        event.preventDefault();
         setUserProps(event.value);
     }
 
     const handleFileChange = (event) => {
+        event.preventDefault();
         setFile(event.value)
     }
 
@@ -136,19 +140,14 @@ const CreateTemplate = (props) => {
         return string
 
     }
-    const componentParsing = () => {
+    const componentParsing = (event) => {
+        event.preventDefault();
 
-        const componentInputElement = document.getElementById('componentWindowTextInput');
-        if (componentInputElement) {
-            setComponentInputCode(componentInputElement.value);
-            console.log('Component Input code:', componentInputCode);
+        let newUserProps = JSON.stringify(parse(file));
 
-            let newUserProps = JSON.stringify(parse(componentInputCode));
+        setUserProps(newUserProps);
 
-            setUserProps(newUserProps);
-
-            console.log(newUserProps)
-        }
+        // console.log(newUserProps)
 
     }
 
@@ -161,6 +160,7 @@ const CreateTemplate = (props) => {
         // reader.onload fires when a file is read successfully
         reader.onload = function (event) {
             // event.target.result holds the file code
+            event.preventDefault();
             fileCode = event.target.result;
             componentName = (((fileCode.split('export default'))[1]).split(';'))[0];
             setFile(fileCode)
@@ -174,9 +174,9 @@ const CreateTemplate = (props) => {
             <h1 className="PageTitles">Create A New Template</h1>
             <div id='CreateTemplateColumns'>
                 <div id="CreateTemplateColumnOne">
-                    <form>
+                    <div>
 
-                        <form id="subsection1">
+                        <div id="subsection1">
                             <div className="name-template">
                                 <label htmlFor="templateName">Template Name:</label>
                                 <input type="text" id="templateName" placeholder="Name" />
@@ -189,11 +189,12 @@ const CreateTemplate = (props) => {
                                     <a href="#comp2">Component 2</a>
                                     <a href="#comp3">Component 3</a>
                                 </div>
-                                <button onClick={componentParsing} className="dropbtn">Parse Component</button>
+                                <button onClick={componentParsing} type="button" className="dropbtn">Parse Component</button>
+                                
                             </div>
 
 
-                        </form>
+                        </div>
 
                         <form id="subsection2">
                             <label> Add Props from Component File: </label>
@@ -219,7 +220,7 @@ const CreateTemplate = (props) => {
                             <button type="submit" className="dropbtn" value="Add Expect" onClick={(event) => handleAssertions(event.target.value)} >Add Expect</button>
                             <button type="submit" className="dropbtn" value="Delete Expect" onClick={(event) => handleAssertions(event.target.value)} >Delete Expect</button>
                         </form>
-                    </form>
+                    </div>
                     <Link to="/templateHome"><button className="dropbtn" id="bigSaveTemplateButton">Save Template</button></Link>
                 </div>
 
