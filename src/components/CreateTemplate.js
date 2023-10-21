@@ -5,6 +5,8 @@ import * as ReactDOMServer from 'react-dom/server';
 import CodeWindow from './CodeWindow';
 
 
+//NEED TO CREATE A BACK BUTTON FOR RECHOOSING THE FILE STRUCTURE. 
+
 console.log(parse)
 const CreateTemplate = (props) => {
 
