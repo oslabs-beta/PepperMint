@@ -228,7 +228,7 @@ const CreateTemplate = (props) => {
 
                 <div id="CreateTemplateColumnTwo">
                     <div id="componentWindow" className="component-title">Component Window</div>
-                    <textarea id="componentWindowTextInput" value={file} onChange={handleFileChange} placeholder='Insert Component Text Here...' />
+                    <textarea id="componentWindowTextInput" value={window.sessionStorage.getItem('fileCode')} onChange={handleFileChange} placeholder='Insert Component Text Here...' />
                     <div id="templatePreviewWindow" className="component-title">Template Preview</div>
                     {/* <textarea id="templatePreviewWindowInput" /> */}
                     <div className='code-mirror-wrapper'>
