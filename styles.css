@@ -277,3 +277,15 @@ button {
 .space {
     height: 100px;
 }
+
+#file-input {
+    display: none;
+}
+
+#file-input-label {
+    color: black;
+    padding: 5px;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 4px;
+}
