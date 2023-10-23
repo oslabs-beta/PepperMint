@@ -121,7 +121,7 @@ const CreateTemplate = (props) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
  
     const [userProps, setUserProps] = useState('{}');
-    const [file, setFile] = useState('')
+    const [file, setFile] = useState(window.sessionStorage.getItem('fileCode'))
 
     const toggleDropdown = (event) => {
         event.preventDefault();
@@ -228,7 +228,7 @@ const CreateTemplate = (props) => {
 
                 <div id="CreateTemplateColumnTwo">
                     <div id="componentWindow" className="component-title">Component Window</div>
-                    <textarea id="componentWindowTextInput" value={window.sessionStorage.getItem('fileCode')} onChange={handleFileChange} placeholder='Insert Component Text Here...' />
+                    <textarea id="componentWindowTextInput" defaultValue={file} onChange={handleFileChange} />
                     <div id="templatePreviewWindow" className="component-title">Template Preview</div>
                     {/* <textarea id="templatePreviewWindowInput" /> */}
                     <div className='code-mirror-wrapper'>
