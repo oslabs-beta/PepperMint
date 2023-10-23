@@ -17,8 +17,8 @@ const Login = () => {
         fileCode = event.target.result;
         // Saves the fileCode to session storage to use later
         window.sessionStorage.setItem('fileCode', fileCode);
+        navigate("/createtemplate")
     };
-    navigate("/createtemplate")
   }
 
 
