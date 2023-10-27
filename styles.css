@@ -14,11 +14,23 @@
 }
 
 .inner-box {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
 
+.codemirror-bookmark {
+  background-color: red;
+  color: red;
+  /* opacity: 0; */
+  /* visibility: hidden; */
+}
+
+.codemirror-bookmark:hover {
+  background-color: yellow;
+  opacity: 1;
+  /* visibility: visible; */
 }
 
 .outer-box {
