@@ -10,18 +10,42 @@ const CreateTemplate = (props) => {
 
   const [lineState, setLineState] = useState('');
   const [doc, setDoc] = useState('');
-  const [posArray, setPosArray] = useState([])
+  const [posArray, setPosArray] = useState([]);
   
+  const navigate = useNavigate();
 
   let componentName = 'aComponent'
-  const boilerPlate = [];
+  const boilerPlate = {};
+
+  // const codeTemplate = [
+  //   '\n', '\n', '\n', '\n', 'describe(\'Unit testing for placeholder\ () => {', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '}', '\n', '\n'
+  // ];
 
   const codeTemplate = [
-    '\n', '\n', '\n', '\n', 'describe(\'Unit testing for placeholder\ () => {', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '}', '\n', '\n'
+    '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n'
   ];
 
+  const codeLineLib = {
+
+    a: '\na {\n\n}',
+    b: '\nb!',
+    c: '\nc {\n\n\n}',
+    d: '\nd()dd()()'
+
+  }
+
+  const insertionPtLib = {
+
+    // a: [{start: {line: 2, char: 0}, end: {line: 3, char: 0}}, {start: {line: 2, char: 0}, end: {line: 3, char: 0}}],
+    a: [{start: {line: 2, char: 0}, end: {line: 3, char: 0}}],
+    b: '\nb!',
+    c: '\nc {\n\n\n}',
+    d: '\nd()dd()()'
+
+  }
+
   const onMount = (editor, next) => {
-    
+    componentName = (((file.split('export default'))[1]).split(';'))[0]
     editor.replaceRange((codeTemplate.join('')).replaceAll('placeholder', componentName.slice(1)), { line: 0, char: 0 })
 
     const bookmarkCreator = (lineNo, charNo) => {
@@ -33,62 +57,87 @@ const CreateTemplate = (props) => {
       return editor.setBookmark({line: lineNo, char: charNo}, ac);
     }
 
-    boilerPlate.push(
+    Object.assign(
+      boilerPlate,
       {
-        zone: 'imports',
-        indentLevel: 0,
-        start: bookmarkCreator(0, 0),
-        end: bookmarkCreator(2, 0),
-        contents: [
+        a: {
+          indentLevel: 0,
+          start: bookmarkCreator(0, 0),
+          end: bookmarkCreator(2, 0),
+          insertionStart: bookmarkCreator(1, 0),
+          insertionEnd: bookmarkCreator(1, 1),
+          contents: [
+            
+          ]
+        },
+        // b: {
+        //   zone: 'b',
+        //   indentLevel: 1,
+        //   start: bookmarkCreator(6, 0),
+        //   end: bookmarkCreator(7, 0),
+        //   contents: [
 
-        ]
-      },
-      {
-        zone: 'setup',
-        indentLevel: 1,
-        start: bookmarkCreator(6, 0),
-        end: bookmarkCreator(8, 0),
-        contents: [
+        //   ]          
+        // },
+        // c: {
+        //   zone: 'c',
+        //   indentLevel: 1,
+        //   start: bookmarkCreator(10, 0),
+        //   end: bookmarkCreator(11, 0),
+        //   contents: [
 
-        ]          
-      },
-      {
-        zone: 'props',
-        indentLevel: 1,
-        start: bookmarkCreator(10, 0),
-        end: bookmarkCreator(12, 0),
-        contents: [
+        //   ]
+        // },
+        // d: {
+        //   zone: 'd',
+        //   indentLevel: 1,
+        //   start: bookmarkCreator(14, 0),
+        //   end: bookmarkCreator(15, 0),
+        //   contents: [
 
-        ]
-      },
-      {
-        zone: 'tests',
-        indentLevel: 1,
-        start: bookmarkCreator(14, 0),
-        end: bookmarkCreator(16, 0),
-        contents: [
-
-        ]
+        //   ]
+        // }
       }
-    )
+    );
 
     setDoc(editor);
     addContents(editor);
   }
 
   const addContents = (editor) => {
-
-    addAtBookmarks(editor, '\nimport React from \'react\'', boilerPlate[0].start.find().line)
-    addAtBookmarks(editor, '\nconst props = {\n\n\n}', boilerPlate[2].start.find().line)
-
+    addAtBookmarks(editor, codeLineLib['a'], boilerPlate['a'].insertionStart.find().line)
+    // addNewContents(editor, 'a');
   }
 
   const addAtBookmarks = (editor = doc, insertValue, insertLine) => {
     editor.replaceRange(insertValue, { line : insertLine, char: 0 });
   }
 
+  const addNewContents = (editor, title) => {
+    
+    const bookmarkCreator = (lineNo, charNo) => {
+      const ac = document.createElement("span")
+      ac.textContent = ' ';
+      ac.className = 'codemirror-bookmark';
+      ac.title=`${posArray.length}`
+
+      return editor.setBookmark({line: lineNo, char: charNo}, ac);
+    }
+    
+    // insertionPtLib['a'].forEach((insertionPt) => {
+    //   boilerPlate['a'].contents.push(
+    //     {
+    //       start: bookmarkCreator(boilerPlate['a'].start.find().line + insertionPt.start.line, 0),
+    //       end: bookmarkCreator(boilerPlate['a'].start.find().line + insertionPt.end.line, 0),
+    //     }
+    //   );
+    // })
+
+  }
+
   const valueCapture = (_, __, value) => {
-      console.log(value);
+    window.sessionStorage.setItem("finalDraft", value);
+    return value;
   }
 
   const addAllProps = (event) => {
@@ -97,8 +146,8 @@ const CreateTemplate = (props) => {
       const propsObj = Object.keys(JSON.parse(userProps));
 
       for (let i = 0; i < propsObj.length; i++) {
-          if (i === propsObj.length - 1) handleInsert(`${propsObj[i]}: ''\n`, 0);
-          else handleInsert(`${propsObj[i]}: '',\n`, 0);
+          if (i === propsObj.length - 1) addAtBookmarks(doc, `\n${propsObj[i]}: ''\n`, boilerPlate[2].start.find().line);
+          else addAtBookmarks(doc, `${propsObj[i]}: '',\n`, boilerPlate[2].start.find().line);
       }
 
   }
@@ -130,6 +179,7 @@ const CreateTemplate = (props) => {
     setUserProps(newUserProps);
   }
 
+
   const readFile = (event) => {
       event.preventDefault();
       let compFile = event.target.files[0];
@@ -141,7 +191,8 @@ const CreateTemplate = (props) => {
           // event.target.result holds the file code
           event.preventDefault();
           fileCode = event.target.result;
-          componentName = (((fileCode.split('export default'))[1]).split(';'))[0];
+          componentName = (((file.split('export default'))[1]).split(';'))[0];
+          console.log(componentName);
           setFile(fileCode)
           doc.replaceRange((codeTemplate.join('')).replaceAll('aComponent', componentName.slice(1)), { line: 0, char: 0 }, { line: 0, char: 0 })
       };
@@ -182,6 +233,9 @@ const CreateTemplate = (props) => {
     setLineState(event.target.value);
   }
 
+  function goToFinalDraft(){
+    navigate("/finaldraft")
+  }
 
   return (
     <>
@@ -243,7 +297,7 @@ const CreateTemplate = (props) => {
                   <form id="subsection4">
                   </form>
               </div>
-              <Link to="/templateHome"><button className="dropbtn" id="bigSaveTemplateButton">Save Template</button></Link>
+              <button className="dropbtn" id="bigSaveTemplateButton" onClick={goToFinalDraft}>Save Template</button>
           </div>
 
           <div id="CreateTemplateColumnTwo">
