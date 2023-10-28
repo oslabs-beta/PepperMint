@@ -22,15 +22,25 @@
 
 .codemirror-bookmark {
   background-color: red;
-  color: red;
+  /* color: red; */
   /* opacity: 0; */
   /* visibility: hidden; */
 }
 
 .codemirror-bookmark:hover {
   background-color: yellow;
-  opacity: 1;
-  /* visibility: visible; */
+}
+
+.codemirror-insertion-point {
+  background-color: blue;
+
+}
+
+.codemirror-insertion-point:hover {
+  background-color: yellow;
+  /* color: red; */
+  /* opacity: 0; */
+  /* visibility: hidden; */
 }
 
 .outer-box {

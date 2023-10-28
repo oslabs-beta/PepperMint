@@ -9,7 +9,7 @@ import CodeWindow from './CodeWindow';
 const CreateTemplate = (props) => {
 
   const [lineState, setLineState] = useState('');
-  const [doc, setDoc] = useState('');
+  const [doc, setDoc] = useState({});
   const [posArray, setPosArray] = useState([]);
   
   const navigate = useNavigate();
@@ -27,58 +27,51 @@ const CreateTemplate = (props) => {
 
   const codeLineLib = {
 
-    a: '\na {\n\n}',
-    b: '\nb!',
-    c: '\nc {\n\n\n}',
-    d: '\nd()dd()()'
+    a: '\na {\n\n\n}\n',
+    b: '\nb( )bb( )( )\n'
+    // c: '\nc {\n\n\n}',
+    // d: '\nd()dd()()'
 
   }
 
   const insertionPtLib = {
 
-    // a: [{start: {line: 2, char: 0}, end: {line: 3, char: 0}}, {start: {line: 2, char: 0}, end: {line: 3, char: 0}}],
-    a: [{start: {line: 2, char: 0}, end: {line: 3, char: 0}}],
-    b: '\nb!',
-    c: '\nc {\n\n\n}',
-    d: '\nd()dd()()'
+    a: [{start: {line: 3, char: 0}, end: {line: 4, char: 0}}],
+    b: [{start: {line: 2, char: 3}, end: {line: 2, char: 3}}]
+    // c: '\nc {\n\n\n}',
+    // d: '\nd()dd()()'
 
   }
 
-  const onMount = (editor, next) => {
+  const onMount = async (editor) => {
+    setDoc(editor);
+    
     componentName = (((file.split('export default'))[1]).split(';'))[0]
     editor.replaceRange((codeTemplate.join('')).replaceAll('placeholder', componentName.slice(1)), { line: 0, char: 0 })
-
-    const bookmarkCreator = (lineNo, charNo) => {
-      const ac = document.createElement("span")
-      ac.textContent = ' ';
-      ac.className = 'codemirror-bookmark';
-      ac.title=`${posArray.length}`
-
-      return editor.setBookmark({line: lineNo, char: charNo}, ac);
-    }
 
     Object.assign(
       boilerPlate,
       {
-        a: {
-          indentLevel: 0,
-          start: bookmarkCreator(0, 0),
-          end: bookmarkCreator(2, 0),
-          insertionStart: bookmarkCreator(1, 0),
-          insertionEnd: bookmarkCreator(1, 1),
-          contents: [
-            
-          ]
-        },
-        // b: {
-        //   zone: 'b',
-        //   indentLevel: 1,
-        //   start: bookmarkCreator(6, 0),
-        //   end: bookmarkCreator(7, 0),
+        // a: {
+        //   indentLevel: 0,
+        //   start: bookmarkCreator(0, 0, editor),
+        //   end: bookmarkCreator(3, 0, editor),
+        //   insertionStart: bookmarkCreator(1, 0, editor, 'codemirror-insertion-point'),
+        //   insertionEnd: bookmarkCreator(2, 0, editor, 'codemirror-insertion-point'),
         //   contents: [
-
-        //   ]          
+            
+        //   ]
         // },
+        b: {
+          indentLevel: 1,
+          start: bookmarkCreator(6, 0, editor),
+          end: bookmarkCreator(9, 0, editor),
+          insertionStart: bookmarkCreator(7, 0, editor, 'codemirror-insertion-point'),
+          insertionEnd: bookmarkCreator(8, 0, editor, 'codemirror-insertion-point'),
+          contents: [
+
+          ]          
+        }
         // c: {
         //   zone: 'c',
         //   indentLevel: 1,
@@ -100,38 +93,52 @@ const CreateTemplate = (props) => {
       }
     );
 
-    setDoc(editor);
+
+    setTimeout(() => { console.log(doc); }, 0)
     addContents(editor);
   }
 
   const addContents = (editor) => {
-    addAtBookmarks(editor, codeLineLib['a'], boilerPlate['a'].insertionStart.find().line)
-    // addNewContents(editor, 'a');
+    // addAtBookmarks(editor, codeLineLib['a'], boilerPlate['a'].insertionStart.find().line, boilerPlate['a'].insertionEnd.find().line)
+    // addNewInsertionPts(editor, 'a');
+
+    addAtBookmarks(editor, codeLineLib['b'], boilerPlate['b'].insertionStart.find().line, boilerPlate['b'].insertionEnd.find().line)
+    addNewInsertionPts(editor, 'b');
   }
 
-  const addAtBookmarks = (editor = doc, insertValue, insertLine) => {
-    editor.replaceRange(insertValue, { line : insertLine, char: 0 });
+  const addAtBookmarks = (editor = doc, insertValue, start, end) => {
+    editor.replaceRange(insertValue, { line : start, char: 0 }, { line : end, char: 1 });
   }
 
-  const addNewContents = (editor, title) => {
+  const addNewInsertionPts = (editor, title) => {
     
-    const bookmarkCreator = (lineNo, charNo) => {
+    insertionPtLib[title].forEach((insertionPt) => {
+
+
       const ac = document.createElement("span")
       ac.textContent = ' ';
-      ac.className = 'codemirror-bookmark';
+      ac.className = 'codemirror-insertion-point';
       ac.title=`${posArray.length}`
 
-      return editor.setBookmark({line: lineNo, char: charNo}, ac);
-    }
-    
-    // insertionPtLib['a'].forEach((insertionPt) => {
-    //   boilerPlate['a'].contents.push(
-    //     {
-    //       start: bookmarkCreator(boilerPlate['a'].start.find().line + insertionPt.start.line, 0),
-    //       end: bookmarkCreator(boilerPlate['a'].start.find().line + insertionPt.end.line, 0),
-    //     }
-    //   );
-    // })
+      const bc = document.createElement("span")
+      bc.textContent = ' ';
+      bc.className = 'codemirror-insertion-point';
+      bc.title=`${posArray.length}`
+      // console.log(editor.getRange({line: 8, ch: 0}, {line: 8, ch: 10}))
+
+      // editor.setBookmark({line: 8, ch: 3}, ac)
+
+      boilerPlate[title].contents.push(
+        // {
+        //   start: bookmarkCreator(boilerPlate[title].start.find().line + insertionPt.start.line, 3, editor, 'codemirror-insertion-point'),
+        //   end: bookmarkCreator(boilerPlate[title].start.find().line + insertionPt.end.line, 3, editor, 'codemirror-insertion-point'),
+        // },
+        {
+          start: editor.setBookmark({line: 8, ch: 2}, ac),
+          end: editor.setBookmark({line: 8, ch: 3}, bc)
+        }
+      );
+    })
 
   }
 
@@ -150,6 +157,16 @@ const CreateTemplate = (props) => {
           else addAtBookmarks(doc, `${propsObj[i]}: '',\n`, boilerPlate[2].start.find().line);
       }
 
+  }
+
+  const bookmarkCreator = (lineNo, charNo, editor, kind = 'codemirror-bookmark') => {
+
+    const ac = document.createElement("span")
+    ac.textContent = ' ';
+    ac.className = kind;
+    ac.title=`${posArray.length}`
+
+    return editor.setBookmark({line: lineNo, char: charNo}, ac);
   }
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
