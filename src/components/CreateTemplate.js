@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import parse from './propParser2.js';
-import * as ReactDOMServer from 'react-dom/server';
 import CodeWindow from './CodeWindow';
 
 //NEED TO CREATE A BACK BUTTON FOR RECHOOSING THE FILE STRUCTURE. 
@@ -15,74 +14,129 @@ const CreateTemplate = (props) => {
   const navigate = useNavigate();
 
   let componentName = 'aComponent'
-  const boilerPlate = {};
+  const macroStructure = {};
 
   const codeTemplate = [
-    '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n'
+    '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n',
+    '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n',
   ];
 
   const codeLineLib = {
-
     a: '\na {\n\n\n}\n',
     b: '\nb( )bb( )( )\n'
-
   }
 
   const insertionPtLib = {
+    a: [{start: {line: 2, char: 0}, end: {line: 3, char: 0}, kind: 'codemirror-subinsert'}],
+    b: [{start: {line: 1, char: 2}, end: {line: 1, char: 3}, kind: 'codemirror-inline'}, 
+        {start: {line: 1, char: 7}, end: {line: 1, char: 8}, kind: 'codemirror-inline'},
+        {start: {line: 1, char: 10}, end: {line: 1, char: 11}, kind: 'codemirror-inline'}]
+  }
 
-    a: [{start: {line: 3, char: 0}, end: {line: 4, char: 0}, kind: 'codemirror-subinsert'}],
-    b: [{start: {line: 2, char: 2}, end: {line: 2, char: 3}, kind: 'codemirror-inline'}, 
-        {start: {line: 2, char: 7}, end: {line: 2, char: 8}, kind: 'codemirror-inline'},
-        {start: {line: 2, char: 10}, end: {line: 2, char: 11}, kind: 'codemirror-inline'}]
+  class InsertionObject {
+
+    constructor(startPos, endPos, kind) {
+      this.insertionStart = bookmarkCreator(startPos, kind);
+      this.insertionEnd = bookmarkCreator(endPos, kind)
+      this.kind = kind;
+      this.contents = [];
+    }
+
+    addContents(title) {
+      doc.replaceRange(codeLineLib[title], this.fetchPosition('s'), this.fetchPosition('end'));
+      this.addInsertionPts(title);
+    }
+
+    addInsertionPts(title) {
+
+      const newInsertion = new InsertionObject(this.fetchPosition('s'), this.fetchPosition('e'), this.kind);
+
+      insertionPtLib[title].forEach((insertionPt) => {
+  
+        newInsertion.contents.push(
+          new InsertionObject(
+            {line: this.insertionStart.find().line + insertionPt.start.line, ch: insertionPt.start.char}, 
+            {line: this.insertionStart.find().line + insertionPt.end.line, ch: insertionPt.end.char},
+            insertionPt.kind
+          )
+        );
+
+        this.contents.push(newInsertion);
+
+      });
+
+    }
+
+    spanBuilder(className) {
+
+      const bookmarkSpan = document.createElement("span");
+      bookmarkSpan.textContent = ' ';
+      bookmarkSpan.className = className;
+      
+      return bookmarkSpan;
+
+    }
+
+    fetchPosition(startOrEnd) {
+
+      return (startOrEnd === 's') ? 
+      {line: this.insertionStart.find().line, ch: this.insertionStart.find().ch} :
+      {line: this.insertionEnd.find().line, ch: this.insertionEnd.find().ch} ;
+      
+    }
 
   }
 
-  const onMount = (editor) => {    
+  const onMount = (editor) => {
+
     componentName = (((file.split('export default'))[1]).split(';'))[0]
     doc = editor;
     doc.replaceRange((codeTemplate.join('')).replaceAll('placeholder', componentName.slice(1)), { line: 0, char: 0 })
 
     Object.assign(
-      boilerPlate,
+      macroStructure,
       {
         a: {
           indentLevel: 0,
           start: bookmarkCreator({line: 0, char: 0}),
           end: bookmarkCreator({line: 3, char: 0}),
-          insertionStart: bookmarkCreator({line: 1, char: 0}, 'codemirror-insertion-point'),
-          insertionEnd: bookmarkCreator({line: 2, char: 0}, 'codemirror-insertion-point'),
-          // 
-          contents: [
-            
-          ]
+          insertionZone: new InsertionObject({line: 1, char: 0}, {line: 2, char: 0}, 'codemirror-insertion-point')
         },
         b: {
           indentLevel: 1,
           start: bookmarkCreator({line: 6, char: 0}),
           end: bookmarkCreator({line: 9, char: 0}),
-          insertionStart: bookmarkCreator({line: 7, char: 0}, 'codemirror-insertion-point'),
-          insertionEnd: bookmarkCreator({line: 8, char: 0}, 'codemirror-insertion-point'),
-          contents: [
-
-          ]          
+          insertionZone: new InsertionObject({line: 7, char: 0}, {line: 8, char: 0}, 'codemirror-insertion-point')  
+        },
+        c: {
+          indentLevel: 0,
+          start: bookmarkCreator({line: 12, char: 0}),
+          end: bookmarkCreator({line: 15, char: 0}),
+          insertionZone: new InsertionObject({line: 13, char: 0}, {line: 14, char: 0}, 'codemirror-insertion-point')
         }
       }
     );
 
-    addContents();
-    console.log(boilerPlate);
+    console.log(macroStructure);
+    console.log(macroStructure['a']);
+    console.log(macroStructure['a'].insertionZone.addContents('a'));
+    console.log(macroStructure['b'].insertionZone.addContents('b'));
+
+
+    // addContents();
+    console.log(macroStructure);
   }
 
   const addContents = () => {
     
     const fetchInsertionPt = (title, startOrEnd) => {
-     return (startOrEnd === 's') ? boilerPlate[title].insertionStart.find() : boilerPlate[title].insertionEnd.find();
+     return (startOrEnd === 's') ? macroStructure[title].insertionStart.find() : macroStructure[title].insertionEnd.find();
     }
 
-    addAtBookmarks(codeLineLib['a'], fetchInsertionPt('a', 's').line, fetchInsertionPt('a', 'e').line)
-    addAtBookmarks(codeLineLib['b'], fetchInsertionPt('b', 's').line, fetchInsertionPt('b', 'e').line)
-    addNewInsertionPts('a');
-    addNewInsertionPts('b');
+    // addAtBookmarks(codeLineLib['a'], fetchInsertionPt('a', 's').line, fetchInsertionPt('a', 'e').line)
+    // addAtBookmarks(codeLineLib['b'], fetchInsertionPt('b', 's').line, fetchInsertionPt('b', 'e').line)
+    // addNewInsertionPts('a');
+    // addNewInsertionPts('b');
 
   }
 
@@ -102,10 +156,10 @@ const CreateTemplate = (props) => {
       bc.textContent = ' ';
       bc.className = insertionPt.kind;
 
-      boilerPlate[title].contents.push(
+      macroStructure[title].contents.push(
         {
-          start: doc.setBookmark({line: boilerPlate[title].start.find().line + insertionPt.start.line, ch: insertionPt.start.char}, ac),
-          end: doc.setBookmark({line: boilerPlate[title].start.find().line + insertionPt.end.line, ch: insertionPt.end.char}, bc)
+          start: doc.setBookmark({line: macroStructure[title].start.find().line + insertionPt.start.line, ch: insertionPt.start.char}, ac),
+          end: doc.setBookmark({line: macroStructure[title].start.find().line + insertionPt.end.line, ch: insertionPt.end.char}, bc)
         }
       );
 
@@ -123,8 +177,8 @@ const CreateTemplate = (props) => {
       const propsObj = Object.keys(JSON.parse(userProps));
 
       for (let i = 0; i < propsObj.length; i++) {
-          if (i === propsObj.length - 1) addAtBookmarks(`\n${propsObj[i]}: ''\n`, boilerPlate[2].start.find().line);
-          else addAtBookmarks(`${propsObj[i]}: '',\n`, boilerPlate[2].start.find().line);
+          if (i === propsObj.length - 1) addAtBookmarks(`\n${propsObj[i]}: ''\n`, macroStructure[2].start.find().line);
+          else addAtBookmarks(`${propsObj[i]}: '',\n`, macroStructure[2].start.find().line);
       }
 
   }
@@ -185,30 +239,6 @@ const CreateTemplate = (props) => {
 
   }
 
-  const newBookmark = (event) => {
-    event.preventDefault();
-
-    let ac = document.createElement("span")
-    ac.textContent = ' ';
-    ac.className = 'codemirror-bookmark';
-    ac.title=`${posArray.length}`
-
-    const currentPosArray = [... posArray];
-    currentPosArray.push(doc.setBookmark({line: Number(lineState) - 1, char: 1}, ac))
-    setPosArray(currentPosArray);
-  }
-
-  const findBookmarks = (event) => {
-    event.preventDefault();
-
-    console.log('posArray:')
-
-    for (let i = 0; i < posArray.length; i++) {
-      console.log(posArray[i].find());
-    }
-
-  }
-
   const insertionTest = (event) => {
     event.preventDefault();
     doc.replaceRange('\n\n\n\n', { line : 2, char: 0 });
@@ -257,15 +287,6 @@ const CreateTemplate = (props) => {
                   </form>
 
                   <form id="subsection3">
-                    <label> Add New Test Blocks: </label>
-                    <br />
-                    <br />
-                    <button className="dropbtn" onClick={insertionTest}>Add Test</button>
-                    <br />
-                    <br />
-                    <input value={lineState} onChange={getLineNum}></input>
-                    <button onClick={newBookmark}>Add Bookmark</button>
-                    <button onClick={findBookmarks}>Find Bookmark</button>
                     <button 
                       onClick={(event) => { 
                         event.preventDefault()
