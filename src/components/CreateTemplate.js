@@ -9,17 +9,14 @@ import CodeWindow from './CodeWindow';
 const CreateTemplate = (props) => {
 
   const [lineState, setLineState] = useState('');
-  const [doc, setDoc] = useState({});
+  // const [doc, setDoc] = useState({});
+  let doc = {};
   const [posArray, setPosArray] = useState([]);
   
   const navigate = useNavigate();
 
   let componentName = 'aComponent'
   const boilerPlate = {};
-
-  // const codeTemplate = [
-  //   '\n', '\n', '\n', '\n', 'describe(\'Unit testing for placeholder\ () => {', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '}', '\n', '\n'
-  // ];
 
   const codeTemplate = [
     '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n'
@@ -43,9 +40,7 @@ const CreateTemplate = (props) => {
 
   }
 
-  const onMount = async (editor) => {
-    setDoc(editor);
-    
+  const onMount = (editor) => {    
     componentName = (((file.split('export default'))[1]).split(';'))[0]
     editor.replaceRange((codeTemplate.join('')).replaceAll('placeholder', componentName.slice(1)), { line: 0, char: 0 })
 
@@ -93,21 +88,22 @@ const CreateTemplate = (props) => {
       }
     );
 
-
-    setTimeout(() => { console.log(doc); }, 0)
-    addContents(editor);
+    // setDoc(editor);
+    doc = editor;
+    // setTimeout(() => { addContents(doc) }, 1000)
+    addContents(doc);
   }
 
-  const addContents = (editor) => {
+  const addContents = () => {
     // addAtBookmarks(editor, codeLineLib['a'], boilerPlate['a'].insertionStart.find().line, boilerPlate['a'].insertionEnd.find().line)
     // addNewInsertionPts(editor, 'a');
 
-    addAtBookmarks(editor, codeLineLib['b'], boilerPlate['b'].insertionStart.find().line, boilerPlate['b'].insertionEnd.find().line)
-    addNewInsertionPts(editor, 'b');
+    addAtBookmarks(codeLineLib['b'], boilerPlate['b'].insertionStart.find().line, boilerPlate['b'].insertionEnd.find().line)
+    addNewInsertionPts(doc, 'b');
   }
 
-  const addAtBookmarks = (editor = doc, insertValue, start, end) => {
-    editor.replaceRange(insertValue, { line : start, char: 0 }, { line : end, char: 1 });
+  const addAtBookmarks = (insertValue, start, end) => {
+    doc.replaceRange(insertValue, { line : start, char: 0 }, { line : end, char: 1 });
   }
 
   const addNewInsertionPts = (editor, title) => {
@@ -153,8 +149,8 @@ const CreateTemplate = (props) => {
       const propsObj = Object.keys(JSON.parse(userProps));
 
       for (let i = 0; i < propsObj.length; i++) {
-          if (i === propsObj.length - 1) addAtBookmarks(doc, `\n${propsObj[i]}: ''\n`, boilerPlate[2].start.find().line);
-          else addAtBookmarks(doc, `${propsObj[i]}: '',\n`, boilerPlate[2].start.find().line);
+          if (i === propsObj.length - 1) addAtBookmarks(`\n${propsObj[i]}: ''\n`, boilerPlate[2].start.find().line);
+          else addAtBookmarks(`${propsObj[i]}: '',\n`, boilerPlate[2].start.find().line);
       }
 
   }
