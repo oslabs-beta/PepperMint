@@ -43,6 +43,22 @@
   /* visibility: hidden; */
 }
 
+.codemirror-subinsert {
+  background-color: green;
+}
+
+.codemirror-subinsert:hover {
+  background-color: yellow;
+}
+
+.codemirror-inline {
+  background-color: green;
+}
+
+.codemirror-inline:hover {
+  background-color: yellow;
+}
+
 .outer-box {
     display: flex;
     align-items: center;

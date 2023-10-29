@@ -9,8 +9,7 @@ import CodeWindow from './CodeWindow';
 const CreateTemplate = (props) => {
 
   const [lineState, setLineState] = useState('');
-  // const [doc, setDoc] = useState({});
-  let doc = {};
+  let doc = {}; // I changed this back from a stateful variable to a regular one.
   const [posArray, setPosArray] = useState([]);
   
   const navigate = useNavigate();
@@ -26,116 +25,91 @@ const CreateTemplate = (props) => {
 
     a: '\na {\n\n\n}\n',
     b: '\nb( )bb( )( )\n'
-    // c: '\nc {\n\n\n}',
-    // d: '\nd()dd()()'
 
   }
 
   const insertionPtLib = {
 
-    a: [{start: {line: 3, char: 0}, end: {line: 4, char: 0}}],
-    b: [{start: {line: 2, char: 3}, end: {line: 2, char: 3}}]
-    // c: '\nc {\n\n\n}',
-    // d: '\nd()dd()()'
+    a: [{start: {line: 3, char: 0}, end: {line: 4, char: 0}, kind: 'codemirror-subinsert'}],
+    b: [{start: {line: 2, char: 2}, end: {line: 2, char: 3}, kind: 'codemirror-inline'}, 
+        {start: {line: 2, char: 7}, end: {line: 2, char: 8}, kind: 'codemirror-inline'},
+        {start: {line: 2, char: 10}, end: {line: 2, char: 11}, kind: 'codemirror-inline'}]
 
   }
 
   const onMount = (editor) => {    
     componentName = (((file.split('export default'))[1]).split(';'))[0]
-    editor.replaceRange((codeTemplate.join('')).replaceAll('placeholder', componentName.slice(1)), { line: 0, char: 0 })
+    doc = editor;
+    doc.replaceRange((codeTemplate.join('')).replaceAll('placeholder', componentName.slice(1)), { line: 0, char: 0 })
 
     Object.assign(
       boilerPlate,
       {
-        // a: {
-        //   indentLevel: 0,
-        //   start: bookmarkCreator(0, 0, editor),
-        //   end: bookmarkCreator(3, 0, editor),
-        //   insertionStart: bookmarkCreator(1, 0, editor, 'codemirror-insertion-point'),
-        //   insertionEnd: bookmarkCreator(2, 0, editor, 'codemirror-insertion-point'),
-        //   contents: [
+        a: {
+          indentLevel: 0,
+          start: bookmarkCreator({line: 0, char: 0}),
+          end: bookmarkCreator({line: 3, char: 0}),
+          insertionStart: bookmarkCreator({line: 1, char: 0}, 'codemirror-insertion-point'),
+          insertionEnd: bookmarkCreator({line: 2, char: 0}, 'codemirror-insertion-point'),
+          // 
+          contents: [
             
-        //   ]
-        // },
+          ]
+        },
         b: {
           indentLevel: 1,
-          start: bookmarkCreator(6, 0, editor),
-          end: bookmarkCreator(9, 0, editor),
-          insertionStart: bookmarkCreator(7, 0, editor, 'codemirror-insertion-point'),
-          insertionEnd: bookmarkCreator(8, 0, editor, 'codemirror-insertion-point'),
+          start: bookmarkCreator({line: 6, char: 0}),
+          end: bookmarkCreator({line: 9, char: 0}),
+          insertionStart: bookmarkCreator({line: 7, char: 0}, 'codemirror-insertion-point'),
+          insertionEnd: bookmarkCreator({line: 8, char: 0}, 'codemirror-insertion-point'),
           contents: [
 
           ]          
         }
-        // c: {
-        //   zone: 'c',
-        //   indentLevel: 1,
-        //   start: bookmarkCreator(10, 0),
-        //   end: bookmarkCreator(11, 0),
-        //   contents: [
-
-        //   ]
-        // },
-        // d: {
-        //   zone: 'd',
-        //   indentLevel: 1,
-        //   start: bookmarkCreator(14, 0),
-        //   end: bookmarkCreator(15, 0),
-        //   contents: [
-
-        //   ]
-        // }
       }
     );
 
-    // setDoc(editor);
-    doc = editor;
-    // setTimeout(() => { addContents(doc) }, 1000)
-    addContents(doc);
+    addContents();
+    console.log(boilerPlate);
   }
 
   const addContents = () => {
-    // addAtBookmarks(editor, codeLineLib['a'], boilerPlate['a'].insertionStart.find().line, boilerPlate['a'].insertionEnd.find().line)
-    // addNewInsertionPts(editor, 'a');
+    
+    const fetchInsertionPt = (title, startOrEnd) => {
+     return (startOrEnd === 's') ? boilerPlate[title].insertionStart.find() : boilerPlate[title].insertionEnd.find();
+    }
 
-    addAtBookmarks(codeLineLib['b'], boilerPlate['b'].insertionStart.find().line, boilerPlate['b'].insertionEnd.find().line)
-    addNewInsertionPts(doc, 'b');
+    addAtBookmarks(codeLineLib['a'], fetchInsertionPt('a', 's').line, fetchInsertionPt('a', 'e').line)
+    addAtBookmarks(codeLineLib['b'], fetchInsertionPt('b', 's').line, fetchInsertionPt('b', 'e').line)
+    addNewInsertionPts('a');
+    addNewInsertionPts('b');
+
   }
 
   const addAtBookmarks = (insertValue, start, end) => {
     doc.replaceRange(insertValue, { line : start, char: 0 }, { line : end, char: 1 });
   }
 
-  const addNewInsertionPts = (editor, title) => {
+  const addNewInsertionPts = (title) => {
     
     insertionPtLib[title].forEach((insertionPt) => {
 
-
       const ac = document.createElement("span")
       ac.textContent = ' ';
-      ac.className = 'codemirror-insertion-point';
-      ac.title=`${posArray.length}`
+      ac.className = insertionPt.kind;
 
       const bc = document.createElement("span")
       bc.textContent = ' ';
-      bc.className = 'codemirror-insertion-point';
-      bc.title=`${posArray.length}`
-      // console.log(editor.getRange({line: 8, ch: 0}, {line: 8, ch: 10}))
-
-      // editor.setBookmark({line: 8, ch: 3}, ac)
+      bc.className = insertionPt.kind;
 
       boilerPlate[title].contents.push(
-        // {
-        //   start: bookmarkCreator(boilerPlate[title].start.find().line + insertionPt.start.line, 3, editor, 'codemirror-insertion-point'),
-        //   end: bookmarkCreator(boilerPlate[title].start.find().line + insertionPt.end.line, 3, editor, 'codemirror-insertion-point'),
-        // },
         {
-          start: editor.setBookmark({line: 8, ch: 2}, ac),
-          end: editor.setBookmark({line: 8, ch: 3}, bc)
+          start: doc.setBookmark({line: boilerPlate[title].start.find().line + insertionPt.start.line, ch: insertionPt.start.char}, ac),
+          end: doc.setBookmark({line: boilerPlate[title].start.find().line + insertionPt.end.line, ch: insertionPt.end.char}, bc)
         }
       );
-    })
 
+    });
   }
 
   const valueCapture = (_, __, value) => {
@@ -155,14 +129,13 @@ const CreateTemplate = (props) => {
 
   }
 
-  const bookmarkCreator = (lineNo, charNo, editor, kind = 'codemirror-bookmark') => {
+  function bookmarkCreator(position, kind = 'codemirror-bookmark') {
 
     const ac = document.createElement("span")
     ac.textContent = ' ';
     ac.className = kind;
-    ac.title=`${posArray.length}`
 
-    return editor.setBookmark({line: lineNo, char: charNo}, ac);
+    return doc.setBookmark(position, ac);;
   }
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
