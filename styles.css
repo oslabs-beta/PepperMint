@@ -14,11 +14,49 @@
 }
 
 .inner-box {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
 
+.codemirror-bookmark {
+  background-color: red;
+  /* color: red; */
+  /* opacity: 0; */
+  /* visibility: hidden; */
+}
+
+.codemirror-bookmark:hover {
+  background-color: yellow;
+}
+
+.codemirror-insertion-point {
+  background-color: blue;
+
+}
+
+.codemirror-insertion-point:hover {
+  background-color: yellow;
+  /* color: red; */
+  /* opacity: 0; */
+  /* visibility: hidden; */
+}
+
+.codemirror-subinsert {
+  background-color: green;
+}
+
+.codemirror-subinsert:hover {
+  background-color: yellow;
+}
+
+.codemirror-inline {
+  background-color: green;
+}
+
+.codemirror-inline:hover {
+  background-color: yellow;
 }
 
 .outer-box {
