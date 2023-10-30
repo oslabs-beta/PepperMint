@@ -35,9 +35,7 @@ const CreateTemplate = (props) => {
     props: [{start: {line: 2, char: 0}, end: {line: 3, char: 0}, kind: 'codemirror-subinsert'}],
     beforeAll: [{start: {line: 2, char: 0}, end: {line: 3, char: 0}, kind: 'codemirror-subinsert'}],
     newProp: [{start: {line: 2, char: 0}, end: {line: 3, char: 0}, kind: 'codemirror-subinsert'}],
-    testblock: [
-      // {start: {line: 0, char: 7}, end: {line: 0, char: 8}, kind: 'codemirror-inline'}, 
-      {start: {line: 2, char: 0}, end: {line: 3, char: 0}, kind: 'codemirror-subinsert'}],
+    testblock: [{start: {line: 2, char: 0}, end: {line: 3, char: 0}, kind: 'codemirror-subinsert'}],
     expect: [{start: {line: 1, char: 7}, end: {line: 1, char: 8}, kind: 'codemirror-inline'},
              {start: {line: 1, char: 11}, end: {line: 1, char: 12}, kind: 'codemirror-inline'}]
   }
@@ -62,6 +60,8 @@ const CreateTemplate = (props) => {
       if (!(insertionPtLib[title])) return;
 
       const newInsertion = new InsertionObject(this.fetchPosition('s'), this.fetchPosition('e'), this.kind);
+      // const newInsertion = [];
+
 
       insertionPtLib[title].forEach((insertionPt) => {
   
@@ -173,8 +173,6 @@ const CreateTemplate = (props) => {
     macroStructure['jestHooks'].insertionZone.contents[0].contents[0].addContents('render', false)
     macroStructure['props'].insertionZone.contents[0].contents[0].addContents('propsList', false);
     macroStructure['testZone'].insertionZone.addContents('testblock', true);
-    // macroStructure['testZone'].insertionZone.addContents('testblock', true);
-    // macroStructure['testZone'].insertionZone.addContents('testblock', false);
 
   }
 
@@ -278,30 +276,10 @@ const CreateTemplate = (props) => {
 
   }
 
-
-  const readFile = (event) => {
-      // event.preventDefault();
-      // let compFile = event.target.files[0];
-      // let reader = new FileReader();
-      // reader.readAsText(compFile);
-      // let fileCode = "";
-      // // reader.onload fires when a file is read successfully
-      // reader.onload = function (event) {
-      //     // event.target.result holds the file code
-      //     event.preventDefault();
-      //     fileCode = event.target.result;
-      //     console.log(componentName);
-      //     setFile(fileCode)
-      //     setComponentName(((file.split('export default'))[1]).split(';')[0]);
-      //     // doc.replaceRange((codeTemplate.join('')).replaceAll('aComponent', 'LabeledText'), { line: 0, char: 0 }, { line: 0, char: 0 })
-      // };
-
-  }
-
   function goToFinalDraft(){
 
     navigate("/finaldraft")
-    
+
   }
 
   return (
