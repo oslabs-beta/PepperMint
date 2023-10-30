@@ -1,20 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import parse from './propParser2.js';
-import * as ReactDOMServer from 'react-dom/server';
+import React from 'react';
 import CodeWindow from './CodeWindow';
 
 const FinalDraft = (props) => {
-  const [doc, setDoc] = useState('');
+  let doc = {};
 
   const onMount = (editor, next) => {
-    setDoc(editor);
+    doc = editor;
+    doc.setOption("readOnly", false);
   }
 
-  const valueCapture = (_, __, value) => {
-    console.log(value);
+  const copyClipboard = (event) => {
+      // Write the code to the clipboard
+      navigator.clipboard.writeText(doc.getValue());
   }
-
 
   return (
     <div className='code-mirror-wrapper'>
@@ -22,17 +20,8 @@ const FinalDraft = (props) => {
         value={window.sessionStorage.getItem("finalDraft")}
         displayName=''
         onMount={onMount}
-        onChange={valueCapture}
-        options={{
-          lineWrapping: true,
-          lint: true,
-          mode: 'javascript',
-          theme: 'material',
-          lineNumbers: true,
-          readOnly: false,
-          gutters: ["CodeMirror-linenumbers", "CodeMirror-bookmark"]
-        }}
       />
+      <button onClick={copyClipboard}>Copy Code</button>
     </div>
   )
 }
