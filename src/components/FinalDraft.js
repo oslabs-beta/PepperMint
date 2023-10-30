@@ -15,14 +15,20 @@ const FinalDraft = (props) => {
   }
 
   return (
-    <div className='code-mirror-wrapper'>
-      <CodeWindow
-        value={window.sessionStorage.getItem("finalDraft")}
-        displayName=''
-        onMount={onMount}
-      />
-      <button onClick={copyClipboard}>Copy Code</button>
-    </div>
+    <>
+      <br></br>
+      <br></br>
+      <br></br>
+      <div className='code-mirror-wrapper'>
+        <CodeWindow
+          value={window.sessionStorage.getItem("finalDraft")}
+          displayName=''
+          onMount={onMount}
+        />
+      <br></br>
+        <button onClick={copyClipboard}>Copy Code</button>
+      </div>
+    </>
   )
 }
 

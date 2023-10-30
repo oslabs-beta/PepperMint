@@ -13,6 +13,7 @@ const CreateTemplate = (props) => {
   const navigate = useNavigate();
 
   const [file, setFile] = useState(window.sessionStorage.getItem('fileCode'))
+  const [handlers, setHandlers] = useState('');
   const [componentName, setComponentName] = useState((((file.split('export default'))[1]).split(';'))[0]);
   const macroStructure = {};
 
@@ -24,7 +25,7 @@ const CreateTemplate = (props) => {
   const codeLineLib = {
     // a: '\na {\n\n\n}\n',
     // b: '\nb( )bb( )( )\n',
-    // c: '\nc {\n\n\n}\n'
+    // c: '\nc {\n\n\n}\n',
     imports: '\nimport React from \'React\'\nimport { render, cleanup, screen, waitFor } from \'@testing-library/react\'\nimport userEvent from \'@testing-library/user-event\'\n',
     props: '\nprops {\n\n\n}\n',
     testblock: '\ntest((\' \') => {\n\n\n}\n',
@@ -36,10 +37,10 @@ const CreateTemplate = (props) => {
 
   const insertionPtLib = {
     // a: [{start: {line: 2, char: 0}, end: {line: 3, char: 0}, kind: 'codemirror-subinsert'}],
-    // b: [{start: {line: 1, char: 2}, end: {line: 1, char: 3}, kind: 'codemirror-inline'}, 
+    // b: [{start: {line: 1, char: 2}, end: {line: 1, char: 3}, kind: 'codemirror-inline'},
     //     {start: {line: 1, char: 7}, end: {line: 1, char: 8}, kind: 'codemirror-inline'},
     //     {start: {line: 1, char: 10}, end: {line: 1, char: 11}, kind: 'codemirror-inline'}],
-    // c: [{start: {line: 2, char: 0}, end: {line: 3, char: 0}, kind: 'codemirror-subinsert'}]
+    // c: [{start: {line: 2, char: 0}, end: {line: 3, char: 0}, kind: 'codemirror-subinsert'}],
     props: [{start: {line: 2, char: 0}, end: {line: 3, char: 0}, kind: 'codemirror-subinsert'}],
     beforeAll: [{start: {line: 2, char: 0}, end: {line: 3, char: 0}, kind: 'codemirror-subinsert'}],
     newProp: [{start: {line: 2, char: 0}, end: {line: 3, char: 0}, kind: 'codemirror-subinsert'}],
@@ -113,19 +114,6 @@ const CreateTemplate = (props) => {
       {line: this.insertionEnd.find().line, ch: this.insertionEnd.find().ch} ;
 
     }
-
-    // clearMarks() {
-
-    //   this.insertionStart.clear();
-    //   this.insertionEnd.clear();
-
-    //   this.contents.forEach((insertionObj) => {
-    //     this.insertionStart.clear();
-    //     this.insertionEnd.clear();
-    //   });
-
-    // }
-
   }
 
   const onMount = (editor) => {
@@ -262,6 +250,23 @@ const CreateTemplate = (props) => {
     codeLineLib['propsList'] = codeLineString;
     insertionPtLib['propsList'] = insertionPtArray;
 
+    findHandlers();
+
+  }
+
+  const findHandlers = (event) => {
+    const eventHandlers = [['onChange', 'change'], ['onClick', 'click'], ['onSubmit', 'submit']];
+    const foundHandlers = eventHandlers
+        .filter(handler => file.indexOf(handler[0]) !== -1)
+        .map(handlers =>
+            <a key={handlers[1]} href="#comp1">{handlers[1]}</a>);
+    console.log('foundHandlers:', foundHandlers);
+    setHandlers(foundHandlers);
+  }
+
+  const handleParseAndHandlers = (event) => {
+      event.preventDefault();
+      findHandlers();
   }
 
   const handleNewTest = (event) => {
@@ -275,7 +280,6 @@ const CreateTemplate = (props) => {
   const handleDeleteTest = (event) => {
 
     event.preventDefault();
-
 
     const zoneContents = macroStructure['testZone'].insertionZone.insertionPts;
     const mostRecent = zoneContents[zoneContents.length - 1]
@@ -314,15 +318,11 @@ const CreateTemplate = (props) => {
 
   return (
     <>
-      <h1 className="PageTitles">Create A New Template</h1>
+      <h1 className="PageTitles">Create A New Test</h1>
       <div id='CreateTemplateColumns'>
           <div id="CreateTemplateColumnOne">
               <div>
                 <div id="subsection1">
-                <div className="name-template">
-                  <label htmlFor="templateName">Template Name:</label>
-                  <input type="text" id="templateName" placeholder="Name" />
-                </div>
                 </div>
                   <form id="subsection3">
                     <label> Undo, Redo, getAllMarks, testButton: </label>
@@ -361,6 +361,15 @@ const CreateTemplate = (props) => {
                     <button type="submit" className="dropbtn" value="Delete Expect" onClick={(event) => handleAssertions(event.target.value)} >Delete Expect</button> */}
                     <button type='submit' onClick={handleNewAssertion}>Add</button>
                     <button>Remove</button>
+                  </form>
+                  <form id="subsection3">
+                    <label> Add Events by Test Block #: </label>
+                    <br></br>
+                    <br></br>
+                    <button onClick={toggleDropdown} className="dropbtn" id="fireEvent" >Fire Event ↓</button>
+                            <div id="myDropdown" className={isDropdownOpen ? "dropdown-content show" : "dropdown-content"}>
+                                {handlers}
+                            </div>
                   </form>
               </div>
               <button className="dropbtn" id="bigSaveTemplateButton" onClick={goToFinalDraft}>Save Template</button>
