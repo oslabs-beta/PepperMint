@@ -289,7 +289,7 @@ const CreateTemplate = (props) => {
         console.log("Hello from chosenQuery")
         const ourValue = event.target.value;
         codeLineLib['queryEvent'] = `${componentName}Mock.${ourValue}('')`
-        macroStructure['testZone'].insertionZone.contents[0][0].contents[0][0].addContents('queryEvent', false)    
+        macroStructure['testZone'].insertionZone.contents[0][0].contents[0][0].addContents('queryEvent', false)
     }
 
 
