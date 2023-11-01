@@ -223,6 +223,10 @@ header {
     font-size: 20px;
 }
 
+ul.footer-links li {
+    padding-right: 10px;
+}
+
 /* Style for the dropdown button */
 .dropbtn {
     background-color: #3498db;
