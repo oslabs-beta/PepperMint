@@ -14,7 +14,9 @@
   },
   "config": {
     "forge": {
-      "packagerConfig": {},
+      "packagerConfig": {
+        "icon": "./assets/PepperMint.ico"
+      },
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",
