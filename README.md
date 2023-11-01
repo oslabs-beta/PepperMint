@@ -1,7 +1,7 @@
-# Peppermint: Streamlining React Testing For Developers
-#PUT PEPPERMINT LOGO HERE
+<img src="./assets/PepperMint.svg" width=25% height=25%>
 
-## Introduction
+# Peppermint: Streamlining React Testing For Developers
+
 There are many testing frameworks out there but no applications that take away the tedium of creating tests for developers. My team and I realized that if we were to create a tool that could handle this issue, we would be able to save developers a lot of time and boost productivity.
 
 ## Solution
