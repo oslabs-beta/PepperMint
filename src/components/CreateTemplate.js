@@ -1,233 +1,490 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import parse from './propParser2.js';
-import * as ReactDOMServer from 'react-dom/server';
 import CodeWindow from './CodeWindow';
 
+//NEED TO CREATE A BACK BUTTON FOR RECHOOSING THE FILE STRUCTURE. 
 
-console.log(parse)
+let doc = {}; // I changed this back from a stateful variable to a regular one.
+let selectorVal = 0;
+let handlers = '';
+let componentName;
+let foundHandlers;
+let queryDropdown = ['', 'getBy...', 'findBy...', 'queryBy...', 'getAllBy...', 'findAllBy...', 'queryAllBy...'];
+let realQueryDropdown;
+let specficQueryDropdown;
+let specificDropdown;
+
 const CreateTemplate = (props) => {
 
-    let componentName = 'aComponent'
+    const navigate = useNavigate();
+
+    let file = window.sessionStorage.getItem('fileCode')
+
+    componentName = ((((file.split('export default'))[1]).split(';'))[0]);
+    const macroStructure = {};
+
     const codeTemplate = [
-        'import React from \'react\'',
-        '\n',
-        'import aComponent from \'../client/components/aComponent\'',
-        '\n',
-        'import { render, screen, waitFor } from \'@testing-library/react\'',
-        '\n\n',
-        'describe(\'Unit testing for aComponent\', () => {',
-        '\n\n',
-        'let aComponentMock;',
-        '\n\n',
-        'const props = {',
-        '\n\n\n',
-        '}',
-        '\n\n',
-        'beforeAll(() => {',
-        '\n\n',
-        'aComponentMock = render(<aComponent {...props}/>);',
-        '\n\n',
-        '}',
-        '\n\n',
-        'test(\'First test block:\'), () => {',
-        '\n\n\n',
-        '});',
-        '\n\n\n',
-        '});'
+        '\n', '\n', '\n', '\n', '\n', '\n', `describe((\'Unit Testing for${componentName}'), () => {`, '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n',
+        '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n', '});', '\n',
     ];
 
-    const [doc, setDoc] = useState('');
-    const [selectorVal, setSelectorVal] = useState(1);
+    const codeLineLib = {
+        // a: '\na {\n\n\n}\n',
+        // b: '\nb( )bb( )( )\n',
+        // c: '\nc {\n\n\n}\n',
+        imports: '\nimport React from \'React\'\nimport { render, cleanup, screen, waitFor } from \'@testing-library/react\'\nimport userEvent from \'@testing-library/user-event\'\n',
+        props: '\nprops {\n\n\n}\n',
+        testblock: '\ntest((\' \'), () => {\n\n\n}\n',
+        beforeAll: '\nbeforeAll(() => {\n\n\n});\n',
+        expect: '\nexpect( ).( );\n',
+        mockVar: `\nlet${componentName}Mock;\n`,
+        render: `\n${componentName}Mock = render(<${componentName} {...props} />);\n`
+    }
 
-    const indices = [10, 15, 21, 24]
+    const insertionPtLib = {
+        // a: [{start: {line: 2, char: 0}, end: {line: 3, char: 0}, kind: 'codemirror-subinsert'}],
+        // b: [{start: {line: 1, char: 2}, end: {line: 1, char: 3}, kind: 'codemirror-inline'},
+        //     {start: {line: 1, char: 7}, end: {line: 1, char: 8}, kind: 'codemirror-inline'},
+        //     {start: {line: 1, char: 10}, end: {line: 1, char: 11}, kind: 'codemirror-inline'}],
+        // c: [{start: {line: 2, char: 0}, end: {line: 3, char: 0}, kind: 'codemirror-subinsert'}],
+        props: [{ start: { line: 2, char: 0 }, end: { line: 3, char: 0 }, kind: 'codemirror-subinsert' }],
+        beforeAll: [{ start: { line: 2, char: 0 }, end: { line: 3, char: 0 }, kind: 'codemirror-subinsert' }],
+        newProp: [{ start: { line: 2, char: 0 }, end: { line: 3, char: 0 }, kind: 'codemirror-subinsert' }],
+        testblock: [{ start: { line: 2, char: 0 }, end: { line: 3, char: 0 }, kind: 'codemirror-subinsert' }],
+        expect: [{ start: { line: 1, char: 7 }, end: { line: 1, char: 8 }, kind: 'codemirror-inline' },
+        { start: { line: 1, char: 11 }, end: { line: 1, char: 12 }, kind: 'codemirror-inline' }]
+    }
+
+    class InsertionObject {
+
+        constructor(startPos, endPos, kind, singleOrMultiple) {
+            this.insertionStart = bookmarkCreator(startPos, kind);
+            this.insertionEnd = bookmarkCreator(endPos, kind)
+            this.kind = kind;
+            this.contents = [];
+            this.insertionPts = [{ insertionStart: this.insertionStart, insertionEnd: this.insertionEnd }];
+            this.allowAdditional = true;
+        }
+
+        addContents(title, allowAdditional) {
+
+            if (this.allowAdditional) {
+                doc.replaceRange(codeLineLib[title], this.fetchPosition('s'), this.fetchPosition('e'));
+                this.addInsertionPts(title, allowAdditional);
+            }
+
+            if (allowAdditional === false) this.allowAdditional = false;
+        }
+
+        addInsertionPts(title, allowAdditional) {
+
+            if (!(insertionPtLib[title])) return;
+
+            const newInsertion = [];
+
+            insertionPtLib[title].forEach((insertionPt) => {
+
+                newInsertion.push(
+                    new InsertionObject(
+                        { line: this.insertionStart.find().line + insertionPt.start.line, ch: insertionPt.start.char },
+                        { line: this.insertionStart.find().line + insertionPt.end.line, ch: insertionPt.end.char },
+                        insertionPt.kind
+                    )
+                );
+
+                this.contents.push(newInsertion);
+
+            });
+
+            if (allowAdditional) this.handleNewLines(this.kind);
+
+        }
+
+        handleNewLines(kind) {
+
+            const insertionEndPos = this.fetchPosition('e');
+
+            doc.replaceRange('\n\n', insertionEndPos)
+            this.insertionStart = bookmarkCreator({ line: insertionEndPos.line + 1, ch: 0 }, kind);
+            this.insertionEnd = bookmarkCreator({ line: insertionEndPos.line + 2, ch: 0 }, kind);
+
+            this.insertionPts.push({ insertionStart: this.insertionStart, insertionEnd: this.insertionEnd })
+
+
+        }
+
+        fetchPosition(startOrEnd) {
+
+            return (startOrEnd === 's') ?
+                { line: this.insertionStart.find().line, ch: this.insertionStart.find().ch } :
+                { line: this.insertionEnd.find().line, ch: this.insertionEnd.find().ch };
+
+        }
+    }
 
     const onMount = (editor) => {
-        setDoc(editor);
+
+        doc = editor;
+        doc.replaceRange((codeTemplate.join('')), { line: 0, char: 0 })
+        parseAndProcess();
+
+        Object.assign(
+            macroStructure,
+            {
+                // a: {
+                //   start: bookmarkCreator({line: 0, char: 0}),
+                //   end: bookmarkCreator({line: 3, char: 0}),
+                //   insertionZone: new InsertionObject({line: 1, char: 0}, {line: 2, char: 0}, 'codemirror-insertion-point')
+                // },
+                // b: {
+                //   start: bookmarkCreator({line: 6, char: 0}),
+                //   end: bookmarkCreator({line: 9, char: 0}),
+                //   insertionZone: new InsertionObject({line: 7, char: 0}, {line: 8, char: 0}, 'codemirror-insertion-point')  
+                // },
+                // c: {
+                //   start: bookmarkCreator({line: 12, char: 0}),
+                //   end: bookmarkCreator({line: 15, char: 0}),
+                //   insertionZone: new InsertionObject({line: 13, char: 0}, {line: 14, char: 0}, 'codemirror-insertion-point')
+                // }
+                imports: {
+                    start: bookmarkCreator({ line: 0, char: 0 }),
+                    end: bookmarkCreator({ line: 3, char: 0 }),
+                    insertionZone: new InsertionObject({ line: 1, char: 0 }, { line: 2, char: 0 }, 'codemirror-insertion-point')
+                },
+                props: {
+                    start: bookmarkCreator({ line: 9, char: 0 }),
+                    end: bookmarkCreator({ line: 12, char: 0 }),
+                    insertionZone: new InsertionObject({ line: 10, char: 0 }, { line: 11, char: 0 }, 'codemirror-insertion-point')
+                },
+                mocks: {
+                    start: bookmarkCreator({ line: 15, char: 0 }),
+                    end: bookmarkCreator({ line: 18, char: 0 }),
+                    insertionZone: new InsertionObject({ line: 16, char: 0 }, { line: 17, char: 0 }, 'codemirror-insertion-point')
+                },
+                jestHooks: {
+                    start: bookmarkCreator({ line: 21, char: 0 }),
+                    end: bookmarkCreator({ line: 24, char: 0 }),
+                    insertionZone: new InsertionObject({ line: 22, char: 0 }, { line: 23, char: 0 }, 'codemirror-insertion-point')
+                },
+                testZone: {
+                    start: bookmarkCreator({ line: 27, char: 0 }),
+                    end: bookmarkCreator({ line: 30, char: 0 }),
+                    insertionZone: new InsertionObject({ line: 28, char: 0 }, { line: 29, char: 0 }, 'codemirror-insertion-point')
+                },
+            }
+        );
+
+        macroStructure['imports'].insertionZone.addContents('imports', false);
+        macroStructure['props'].insertionZone.addContents('props', false);
+        macroStructure['props'].insertionZone.contents[0][0].addContents('propsList', false);
+        macroStructure['mocks'].insertionZone.addContents('mockVar', true);
+        macroStructure['jestHooks'].insertionZone.addContents('beforeAll', false)
+        macroStructure['jestHooks'].insertionZone.contents[0][0].addContents('render', true)    // macroStructure['props'].insertionZone.contents[0].contents[0].addContents('propsList', false);
+        macroStructure['testZone'].insertionZone.addContents('testblock', true);
+
+    }
+
+    function bookmarkCreator(position, kind = 'codemirror-bookmark') {
+
+        const ac = document.createElement("span")
+        ac.textContent = ' ';
+        ac.className = kind;
+
+        return doc.setBookmark(position, ac);;
     }
 
     const valueCapture = (_, __, value) => {
-        console.log(value);
+        window.sessionStorage.setItem("finalDraft", value);
+        // console.log(value);
+        return value;
     }
 
-    const handleInsert = (value, position) => {
-        const numLines = value.split('\n').length;
+    const undoOrRedo = (undoOrRedo) => {
 
-        doc.replaceRange(value, { line: indices[position], char: 0 }, { line: indices[[position]], char: 0 })
-
-        for (let i = position; i < indices.length; i++) {
-            indices[i] = indices[i] + (numLines - 1);
-        }
+        console.log(doc);
+        (undoOrRedo === 'undo') ? doc.undo() : doc.redo();
 
     }
 
-    const handleDelete = (number, position) => {
-        doc.replaceRange('\n', { line: indices[position] - number, char: 0 }, { line: indices[position], char: 0 })
-
-        for (let i = position; i < indices.length; i++) {
-            indices[i] = indices[i] - (number - 1);
-        }
-    }
-
-    const handleProps = (propName, addOrDel) => {
-        (addOrDel === 'add') ? handleInsert(`${propName}: ''\n`, 0) : handleDelete(2, 0)
-    }
-
-    const addAllProps = () => {
+    const addAllProps = (event) => {
+        event.preventDefault();
 
         const propsObj = Object.keys(JSON.parse(userProps));
 
         for (let i = 0; i < propsObj.length; i++) {
-            if (i === propsObj.length - 1) handleInsert(`${propsObj[i]}: ''\n`, 0);
-            else handleInsert(`${propsObj[i]}: '',\n`, 0);
+            if (i === propsObj.length - 1) addAtBookmarks(`\n${propsObj[i]}: ''\n`, macroStructure[2].start.find().line);
+            else addAtBookmarks(`${propsObj[i]}: '',\n`, macroStructure[2].start.find().line);
         }
 
     }
 
-    const handleRender = (value, position) => {
-        handleInsert('AComponentMock = render(<AComponent {...props}/>); \n', 1);
-    }
-
-    const handleTests = (addOrDel) => {
-        const newTest = [
-            'test(\'Another test block:\'), () => {',
-            '\n\n\n',
-            '});',
-            '\n\n'
-        ];
-
-        (addOrDel === 'add') ? handleInsert(newTest.join(''), indices.length - 1) : handleDelete(6, 3);
-    }
-
-    const handleAssertions = (addOrDel) => {
-        console.log(addOrDel);
-        console.log(selectorVal);
-
-        const newAssertion = [
-            'expect();',
-            '\n'
-        ];
-
-        const insertionPoint = (selectorVal === 1) ? 2 : 3 + selectorVal;
-
-        (addOrDel === 'Add Expect') ? handleInsert(newAssertion.join(''), insertionPoint) : handleDelete(6, 3);
-    }
-
-
-
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const [componentInputCode, setComponentInputCode] = useState('');
-    const [userProps, setUserProps] = useState('{}');
-    const [file, setFile] = useState('')
 
-    const toggleDropdown = () => {
+    const [userProps, setUserProps] = useState('{}');
+
+    const toggleDropdown = (event) => {
+        event.preventDefault();
         setIsDropdownOpen(!isDropdownOpen);
     }
 
-    const handleChange = (event) => {
+    const handlePropLoad = (event) => {
+        event.preventDefault();
         setUserProps(event.value);
     }
 
     const handleFileChange = (event) => {
-        setFile(event.value)
+        event.preventDefault();
+        // setFile(event.value)
     }
 
-    const describe = (string) => {
-        return string
+    const parseAndProcess = () => {
 
-    }
-    const componentParsing = () => {
+        const propsList = parse(file);
+        let codeLineString = '\n';
+        let insertionPtArray = [];
+        let i = 1;
 
-        const componentInputElement = document.getElementById('componentWindowTextInput');
-        if (componentInputElement) {
-            setComponentInputCode(componentInputElement.value);
-            console.log('Component Input code:', componentInputCode);
-
-            let newUserProps = JSON.stringify(parse(componentInputCode));
-
-            setUserProps(newUserProps);
-
-            console.log(newUserProps)
+        for (const key in propsList) {
+            codeLineString = codeLineString + `${key}: \' \',\n`
+            insertionPtArray.push({ start: { line: i, char: key.length + 3 }, end: { line: i, char: key.length + 4 }, kind: 'codemirror-inline' });
+            i++;
         }
 
+        
+
+        codeLineLib['propsList'] = codeLineString;
+        insertionPtLib['propsList'] = insertionPtArray;
+
+        toggleQueryDropdown();
+
+        console.log('lmao')
+        findHandlers();
+        console.log('lol')
+
     }
 
-    const readFile = (event) => {
-        event.preventDefault();
-        let compFile = event.target.files[0];
-        let reader = new FileReader();
-        reader.readAsText(compFile);
-        let fileCode = "";
-        // reader.onload fires when a file is read successfully
-        reader.onload = function (event) {
-            // event.target.result holds the file code
-            fileCode = event.target.result;
-            componentName = (((fileCode.split('export default'))[1]).split(';'))[0];
-            setFile(fileCode)
-            doc.replaceRange((codeTemplate.join('')).replaceAll('aComponent', componentName.slice(1)), { line: 0, char: 0 }, { line: 0, char: 0 })
-        };
+    const findHandlers = (event) => {
 
+      
+
+        const eventHandlers = [['', ''], ['onChange', 'change'], ['onClick', 'click'], ['onSubmit', 'submit']];
+        foundHandlers = eventHandlers
+            .filter(handler => file.indexOf(handler[0]) !== -1)
+          
+
+        console.log(foundHandlers);
+
+        const fireEvDD = document.getElementById('fireEvent');
+
+        for (let i = 0; i < foundHandlers.length; i++) {
+          let optionEl = document.createElement('option');
+          optionEl.setAttribute('value', foundHandlers[i][1]);
+          optionEl.setAttribute('key', foundHandlers[i][1]);
+          optionEl.innerHTML = foundHandlers[i][1];
+          fireEvDD.appendChild(optionEl);
+        }
+    }
+
+    const chosenEvent = (event) => {
+        event.preventDefault();
+        const ourValue = event.target.value;
+        codeLineLib['fireEvent'] = `fireEvent.${ourValue}();`
+
+        // Object.assign(macroStructure, {testZone: {
+        //     start: bookmarkCreator({ line: 27, char: 0 }),
+        //     end: bookmarkCreator({ line: 30, char: 0 }),
+        //     insertionZone: new InsertionObject({ line: 28, char: 0 }, { line: 29, char: 0 }, 'codemirror-insertion-point')
+        // }})
+        macroStructure['testZone'].insertionZone.contents[selectorVal][0].addContents('fireEvent', true);
+        // macroStructure['testZone'].insertionZone.addContents('fireEvent', true);
+
+
+    }
+
+    const chosenQuery = (event) => {
+        event.preventDefault();
+        console.log("Hello from chosenQuery")
+        const ourValue = event.target.value;
+        codeLineLib['queryEvent'] = `${componentName}Mock.${ourValue}('')`
+        macroStructure['testZone'].insertionZone.contents[0][0].contents[0][0].addContents('queryEvent', false)
+    }
+
+
+
+
+    const handleNewTest = (event) => {
+        event.preventDefault();
+        macroStructure['testZone'].insertionZone.addContents('testblock', true);
+    }
+
+    const handleDeleteTest = (event) => {
+
+        event.preventDefault();
+
+        const zoneContents = macroStructure['testZone'].insertionZone.insertionPts;
+        const mostRecent = zoneContents[zoneContents.length - 1]
+
+        const mostRecentStart = mostRecent.insertionStart.find();
+        const mostRecentEnd = mostRecent.insertionEnd.find();
+
+
+        doc.replaceRange('', { line: mostRecentStart.line - 1, ch: 0 }, { line: mostRecentEnd.line, ch: 0 });
+        mostRecent.insertionStart.clear();
+        mostRecent.insertionEnd.clear();
+        zoneContents.pop();
+
+    }
+
+    const handleNewAssertion = (event) => {
+        event.preventDefault();
+        const insertionPt = selectorVal;
+        macroStructure['testZone'].insertionZone.contents[selectorVal][0].addContents('expect', true);
+    }
+
+    const testButton = (event) => {
+      event.preventDefault();
+      // console.log("Nassims console Log:", macroStructure['testZone'].insertionZone.contents[0][0])
+      console.log("Nassims console Log:", macroStructure['testZone'].insertionZone.contents[0][0].contents[0][0]);
+    }
+
+    function goToFinalDraft() {
+        navigate("/finaldraft")
+    }
+
+    const toggleQueryDropdown = () => {
+        realQueryDropdown = queryDropdown.map(query =>
+            <option key={query} href="#comp1" onClick={specificDropdown} value={query}>{query}</option>);
+    }
+
+    function specificDropdownMaker(event) {
+        event.preventDefault();
+        console.log("What did the user select?", event.target.value);
+        let newDropdown;
+        let specDropdown = document.getElementById('specEvent');
+        specDropdown.innerHTML = '';
+        let optionEl;
+        if (event.target.value === 'getBy...') {
+            newDropdown = ['getByRole', 'getById', 'getByLabelText', 'getByText', 'getByDisplayValue'];
+        }
+        if (event.target.value === 'findBy...') {
+            newDropdown = ['findByRole', 'findById', 'findByLabelText', 'findByText', 'findDisplayValue'];
+        }
+        if (event.target.value === 'queryBy...') {
+            newDropdown = ['queryByRole', 'queryById', 'queryByLabelText', 'queryByText', 'queryByDisplayValue'];
+        }
+        if (event.target.value === 'getAllBy...') {
+            newDropdown = ['getAllByRole', 'getAllById', 'getAllByLabelText', 'getAllByText', 'getAllByDisplayValue'];
+        }
+        if (event.target.value === 'findAllBy...') {
+            newDropdown = ['findAllByRole', 'findAllById', 'findAllByLabelText', 'findAllByText', 'findAllByDisplayValue'];
+        }
+        if (event.target.value === 'queryAllBy...') {
+            newDropdown = ['queryAllByRole', 'queryAllById', 'queryAllByLabelText', 'queryAllByText', 'queryAllByDisplayValue'];
+        }
+        for (let i = 0; i < newDropdown.length; i++) {
+            optionEl = document.createElement('option');
+            optionEl.setAttribute('value', newDropdown[i]);
+            optionEl.setAttribute('key', newDropdown[i]);
+            optionEl.innerHTML = newDropdown[i];
+            specDropdown.appendChild(optionEl);
+        }
     }
 
     return (
         <>
-            <h1 className="PageTitles">Create A New Template</h1>
+            <h1 className="PageTitles">Create A New Test</h1>
             <div id='CreateTemplateColumns'>
                 <div id="CreateTemplateColumnOne">
-                    <form>
-
-                        <form id="subsection1">
-                            <div className="name-template">
-                                <label htmlFor="templateName">Template Name:</label>
-                                <input type="text" id="templateName" placeholder="Name" />
-                            </div>
-                            <div className="dropdown">
-                                <input type="file" class="dropbtn" onChange={readFile} />
-                                <button onClick={toggleDropdown} className="dropbtn">Select Your Component</button>
-                                <div id="myDropdown" className={isDropdownOpen ? "dropdown-content show" : "dropdown-content"}>
-                                    <a href="#comp1">Component 1</a>
-                                    <a href="#comp2">Component 2</a>
-                                    <a href="#comp3">Component 3</a>
-                                </div>
-                                <button onClick={componentParsing} className="dropbtn">Parse Component</button>
-                            </div>
-
-
-                        </form>
-
-                        <form id="subsection2">
-                            <label> Add Props from Component File: </label>
-                            <br></br>
-                            <br></br>
-                            <textarea id="templateProps" value={userProps} onChange={handleChange} placeholder="Props Will Populate Here" />
-                            <br></br>
-                            <button onClick={addAllProps}> Add these props </button>
-                        </form>
-
+                    <div>
+                        <div id="subsection1">
+                        </div>
                         <form id="subsection3">
-                            <label> Add New Test Blocks: </label>
-                            <br />
-                            <br />
-                            <button className="dropbtn" onClick={() => handleTests('add')}>Add Test</button>
-                            <button className="dropbtn" onClick={() => handleTests('delete')}>Delete Test</button>
-                        </form>
-                        <form id="subsection4">
-                            <label> Add Assertion By Test #: </label>
+                            <label> Undo, Redo, getAllMarks, testButton: </label>
                             <br></br>
                             <br></br>
-                            <input type="number" value={selectorVal} onChange={(event) => setSelectorVal(event.target.value)} />
-                            <button type="submit" className="dropbtn" value="Add Expect" onClick={(event) => handleAssertions(event.target.value)} >Add Expect</button>
-                            <button type="submit" className="dropbtn" value="Delete Expect" onClick={(event) => handleAssertions(event.target.value)} >Delete Expect</button>
+                            <button
+                                onClick={() => { undoOrRedo('undo') }}
+                            >Undo</button>
+                            <button
+                                onClick={() => { undoOrRedo('redo') }}
+                            >Redo</button>
+                            <button
+                                onClick={() => { console.log(doc.getAllMarks()) }}
+                            >getAllMarks</button>
+                            <button
+                                onClick={testButton}
+                            >testButton</button>
                         </form>
-                    </form>
-                    <Link to="/templateHome"><button className="dropbtn" id="bigSaveTemplateButton">Save Template</button></Link>
+                        <form id="subsection3">
+                            <label> Add a New Test Block: </label>
+                            <br></br>
+                            <br></br>
+                            <button
+                                className="dropbtn"
+                                onClick={handleNewTest}
+                            >Add</button>
+                            <button
+                                onClick={handleDeleteTest}
+                                className="dropbtn"
+                            >Remove</button>
+                        </form>
+                        <form id="subsection3">
+                            <label> Add by Test Block # (Zero-based Index): </label>
+                            <br></br>
+                            <br></br>
+                            <input type="number" onChange={(event) => { event.preventDefault(); selectorVal = event.target.value; console.log(selectorVal) }} />
+                            <br></br>
+                            <br></br>
+                            <button type='submit' className="dropbtn" onClick={handleNewAssertion}>Add Expect Statement</button>
+                            <button className="dropbtn">Remove Expect Statement</button>
+                            <br></br>
+                            <br></br>
+
+                            {/* <button onClick={toggleDropdown} className="dropbtn" id="fireEvent" >Fire Event On Test ↓</button>
+                            <div id="myDropdown" className={isDropdownOpen ? "dropdown-content show" : "dropdown-content"}>
+                                {handlers}
+                            </div> */}
+
+                            <label for="fireEvent">Fire Event On Test</label>
+                            <select name='fireEvent' id='fireEvent' onChange={chosenEvent}>
+                                {foundHandlers}
+                            </select>
+
+
+
+
+
+                            {/* <button onClick={toggleQueryDropdown} className="dropbtn" id="queryEvent" > Add Query ↓</button>
+                            <div id="QueryDropdown" className={isDropdownOpen ? "dropdown-content show" : "dropdown-content"}>
+                                {realQueryDropdown}
+                            </div> */}
+
+                            <br></br>
+                            <br></br>
+
+                            <label for="queryEvent">Input Query On Assertion</label>
+                            <select name='queryEvent' id='queryEvent' onChange={specificDropdownMaker}>
+                                {realQueryDropdown}
+                            </select>
+
+                            <br></br>
+                            <br></br>
+
+                            <label for="queryEvent">Select The Specfics</label>
+                            <select name='queryEvent' id='specEvent' onChange={chosenQuery}>
+                                {specificDropdown}
+                            </select>
+
+                        </form>
+                    </div>
+                    <button className="dropbtn" id="bigSaveTemplateButton" onClick={goToFinalDraft}>Finalize Test</button>
                 </div>
 
                 <div id="CreateTemplateColumnTwo">
                     <div id="componentWindow" className="component-title">Component Window</div>
-                    <textarea id="componentWindowTextInput" value={file} onChange={handleFileChange} placeholder='Insert Component Text Here...' />
-                    <div id="templatePreviewWindow" className="component-title">Template Preview</div>
-                    {/* <textarea id="templatePreviewWindowInput" /> */}
+                    <textarea id="componentWindowTextInput" defaultValue={file} onChange={handleFileChange} />
+                    <div id="templatePreviewWindow" className="component-title">Test Preview</div>
                     <div className='code-mirror-wrapper'>
                         <CodeWindow
                             value=''
@@ -235,21 +492,6 @@ const CreateTemplate = (props) => {
                             onMount={onMount}
                             onChange={valueCapture}
                         />
-                        {/* <button onClick={() => handleInsert()}>Generic Insert</button>
-                        <button onClick={() => handleDelete()}>Generic Delete</button>
-                        <button onClick={() => handleRender()}>Add Render</button>
-                        <button onClick={() => handleProps('sampleProp', 'add')}>Add Prop</button>
-                        <button onClick={() => handleProps('sampleProp', 'delete')}>Delete Prop</button>
-                        <button onClick={() => handleTests('add')}>Add Test</button>
-                        <button onClick={() => handleTests('delete')}>Delete Test</button> */}
-                        <div>
-                            {/* <form>
-                                <input type="number" value={selectorVal} onChange={(event) => setSelectorVal(event.target.value)} />
-                                <input type="submit" value="Add Expect" onClick={(event) => handleAssertions(event.target.value)} />
-                                <input type="submit" value="Delete Expect" onClick={(event) => handleAssertions(event.target.value)} />
-                            </form> */}
-
-                        </div>
                     </div>
                 </div>
             </div>

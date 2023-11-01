@@ -24,7 +24,8 @@ const CodeWindow = ({value, displayName, onMount, onChange}) => {
               mode: 'javascript',
               theme: 'material',
               lineNumbers: true,
-              readOnly: true
+              readOnly: true,
+              gutters: ["CodeMirror-linenumbers", "CodeMirror-bookmark"]
             }}
           />
       </div>

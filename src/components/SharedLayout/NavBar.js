@@ -1,17 +1,23 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-function Navbar() {
+function NavBar() {
+    const navigate = useNavigate();
+    const handle = (e) => {
+
+        e.preventDefault();
+        navigate("/")
+    }
+
     return (
         <header>
             <nav>
                 <ul className="horizontal-links">
-                    <li>Peppermint</li>
-                    <li><Link to="/templatelanding">Template Landing</Link></li>
+                    <li><button onClick={handle}>Peppermint</button></li>
                 </ul>
             </nav>
         </header>
     );
 }
 
-export default Navbar;
+export default NavBar;

@@ -18,7 +18,45 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
+}
 
+.codemirror-bookmark {
+    background-color: red;
+    /* color: red; */
+    /* opacity: 0; */
+    /* visibility: hidden; */
+}
+
+.codemirror-bookmark:hover {
+    background-color: yellow;
+}
+
+.codemirror-insertion-point {
+    background-color: blue;
+
+}
+
+.codemirror-insertion-point:hover {
+    background-color: yellow;
+    /* color: red; */
+    /* opacity: 0; */
+    /* visibility: hidden; */
+}
+
+.codemirror-subinsert {
+    background-color: green;
+}
+
+.codemirror-subinsert:hover {
+    background-color: yellow;
+}
+
+.codemirror-inline {
+    background-color: pink;
+}
+
+.codemirror-inline:hover {
+    background-color: yellow;
 }
 
 .outer-box {
@@ -276,4 +314,16 @@ button {
 
 .space {
     height: 100px;
+}
+
+#file-input {
+    display: none;
+}
+
+#file-input-label {
+    color: black;
+    padding: 5px;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 4px;
 }

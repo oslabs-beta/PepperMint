@@ -1,63 +1,35 @@
-// import { ipcRenderer } from 'electron';
 import React, { useState } from 'react';
-// import { ipcRenderer } from 'electron';
-// electron.ipcMain.on('test-event', () => console.log('lol'));
 import { useNavigate } from 'react-router-dom';
 
 
 const Login = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
   const navigate = useNavigate();
-
-
-  // ipcRenderer.on('test-event', this.handler);
-
-  async function handleClick() {
-    let test = await electron.authApi.sendCredentials({ username: username, password: password, kind: 'login' });
-    console.log('test', test)
-    if (test === 'login-successful') {
-      navigate('/templatelanding');
-    }
-    else if (test === 'wrong-username') {
-      console.log('WRONG USERNAME')
-    }
-    else if (test === 'wrong-password') {
-      console.log('WRONG PASSWORD')
-    }
+  const handle = (event) => {
+    event.preventDefault();
+    let compFile = event.target.files[0];
+    let reader = new FileReader();
+    reader.readAsText(compFile);
+    let fileCode = "";
+    // reader.onload fires when a file is read successfully
+    reader.onload = function (event) {
+        // event.target.result holds the file code
+        event.preventDefault();
+        fileCode = event.target.result;
+        // Saves the fileCode to session storage to use later
+        window.sessionStorage.setItem('fileCode', fileCode);
+        navigate("/createtemplate")
+    };
   }
+
 
   return (
     <div className="outer-box">
       <div className="inner-box">
-
         <div className='title'><h1 id="title">PepperMint</h1></div>
-
-        <div className="centered-box">
-          <div>
-            <label>
-              Username:
-              <input type='text' value={username} onChange={(keystroke) => setUsername(keystroke.target.value)} />
-            </label>
-          </div>
-
-          <div>
-            <label>
-              Password:
-              <input type='password' value={password} onChange={(keystroke) => setPassword(keystroke.target.value)} />
-            </label>
-          </div>
-
-          <div>
-            <button onClick={handleClick}> Login </button>
-            <button> Sign Up </button>
-          </div>
-        </div>
-
-
+        <input type="file" id="file-input" onChange={handle}/>
+        <label id="file-input-label" htmlFor="file-input">Select a Component</label>
       </div>
     </div>
-
   )
 }
 
