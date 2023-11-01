@@ -8,7 +8,7 @@ import CodeWindow from './CodeWindow';
 let doc = {}; // I changed this back from a stateful variable to a regular one.
 let selectorVal = 0;
 let handlers = '';
-let file = window.sessionStorage.getItem('fileCode')
+let componentName;
 let foundHandlers;
 let queryDropdown = ['', 'getBy...', 'findBy...', 'queryBy...', 'getAllBy...', 'findAllBy...', 'queryAllBy...'];
 let realQueryDropdown;
@@ -19,8 +19,9 @@ const CreateTemplate = (props) => {
 
     const navigate = useNavigate();
 
+    let file = window.sessionStorage.getItem('fileCode')
 
-    const [componentName, setComponentName] = useState((((file.split('export default'))[1]).split(';'))[0]);
+    componentName = ((((file.split('export default'))[1]).split(';'))[0]);
     const macroStructure = {};
 
     const codeTemplate = [
@@ -234,7 +235,7 @@ const CreateTemplate = (props) => {
 
     const handleFileChange = (event) => {
         event.preventDefault();
-        setFile(event.value)
+        // setFile(event.value)
     }
 
     const parseAndProcess = () => {
@@ -250,22 +251,39 @@ const CreateTemplate = (props) => {
             i++;
         }
 
+        
+
         codeLineLib['propsList'] = codeLineString;
         insertionPtLib['propsList'] = insertionPtArray;
 
         toggleQueryDropdown();
 
+        console.log('lmao')
         findHandlers();
+        console.log('lol')
 
     }
 
     const findHandlers = (event) => {
+
+      
+
         const eventHandlers = [['', ''], ['onChange', 'change'], ['onClick', 'click'], ['onSubmit', 'submit']];
         foundHandlers = eventHandlers
             .filter(handler => file.indexOf(handler[0]) !== -1)
-            .map(handlers =>
-                <option key={handlers[1]} href="#comp1" value={handlers[1]}>{handlers[1]}</option>);
+          
 
+        console.log(foundHandlers);
+
+        const fireEvDD = document.getElementById('fireEvent');
+
+        for (let i = 0; i < foundHandlers.length; i++) {
+          let optionEl = document.createElement('option');
+          optionEl.setAttribute('value', foundHandlers[i][1]);
+          optionEl.setAttribute('key', foundHandlers[i][1]);
+          optionEl.innerHTML = foundHandlers[i][1];
+          fireEvDD.appendChild(optionEl);
+        }
     }
 
     const chosenEvent = (event) => {
@@ -324,10 +342,10 @@ const CreateTemplate = (props) => {
         macroStructure['testZone'].insertionZone.contents[selectorVal][0].addContents('expect', true);
     }
 
-    const testButton = () => {
-        console.log("Nassims console Log:", macroStructure['testZone'].insertionZone.contents[0][0].contents[0][0])
-
-        // console.log(macroStructure['testZone'].insertionZone)
+    const testButton = (event) => {
+      event.preventDefault();
+      // console.log("Nassims console Log:", macroStructure['testZone'].insertionZone.contents[0][0])
+      console.log("Nassims console Log:", macroStructure['testZone'].insertionZone.contents[0][0].contents[0][0]);
     }
 
     function goToFinalDraft() {
