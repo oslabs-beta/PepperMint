@@ -19,19 +19,42 @@
   background-color: hsl(225, 6%, 25%);
 }
 
-/* .editor-container.collapsed {
+.editor-container.collapsed {
   flex-grow: 0;
-} */
+} 
 
-/* .CodeMirror {
+.CodeMirror {
   height: 100%vw !important;
-} */
+}
 
 .code-mirror-wrapper {
-  flex-grow: 1;
+  /* flex-grow: 1; */
   flex-direction: column;
   border-bottom-right-radius: .5rem;
   border-bottom-left-radius: .5rem;
   overflow: hidden;
   font-size: 14px;
+  flex: 1;
+
 }
+.componentWindowFrame{
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.CodeMirror {
+  border: 1px solid #eee;
+  height: auto;
+}
+
+.final-page{
+  display: flex;
+  flex-direction: row;
+  height: 80%;
+};
+#finalComponent{
+  width: 50%;
+  height: 100%;
+  background-color: navy;
+  color: pink;
+} 

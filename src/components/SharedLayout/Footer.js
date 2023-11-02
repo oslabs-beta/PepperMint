@@ -6,9 +6,9 @@ function Footer() {
         <footer>
                 <nav className="footer-nav-centered">
                     <ul className="footer-links">
-                        <li><Link to="/about">About Us</Link></li>
-                        <li><Link to="/terms">Terms & Conditions</Link></li> 
-                        <li><Link to="/contact">Contact Us</Link></li>
+                        <li><Link to="">About Us</Link></li>
+                        <li><Link to="">Terms & Conditions</Link></li> 
+                        <li><Link to="">Contact Us</Link></li>
                     </ul>
                 </nav>
                 

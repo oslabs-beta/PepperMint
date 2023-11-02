@@ -223,6 +223,8 @@ const CreateTemplate = (props) => {
 
     const [userProps, setUserProps] = useState('{}');
 
+
+
     const toggleDropdown = (event) => {
         event.preventDefault();
         setIsDropdownOpen(!isDropdownOpen);
@@ -353,15 +355,24 @@ const CreateTemplate = (props) => {
     }
 
     const toggleQueryDropdown = () => {
-        realQueryDropdown = queryDropdown.map(query =>
-            <option key={query} href="#comp1" onClick={specificDropdown} value={query}>{query}</option>);
+        const selectEl = document.getElementById('queryDropdown')
+        for (let i = 0; i < queryDropdown.length; i++) {
+            let optionEl = document.createElement('option');
+            optionEl.setAttribute('value', queryDropdown[i]);
+            optionEl.setAttribute('key', queryDropdown[i]);
+            optionEl.innerHTML = queryDropdown[i];
+            optionEl.addEventListener('click', specificDropdownMaker);
+            selectEl.appendChild(optionEl);
+        }
+       
+        //<option key={query} href="#comp1" onClick={specificDropdown} value={query}>{query}</option>);
     }
 
     function specificDropdownMaker(event) {
         event.preventDefault();
         console.log("What did the user select?", event.target.value);
         let newDropdown;
-        let specDropdown = document.getElementById('specEvent');
+        let specDropdown = document.getElementById('specQueryDropdown');
         specDropdown.innerHTML = '';
         let optionEl;
         if (event.target.value === 'getBy...') {
@@ -397,25 +408,6 @@ const CreateTemplate = (props) => {
             <div id='CreateTemplateColumns'>
                 <div id="CreateTemplateColumnOne">
                     <div>
-                        <div id="subsection1">
-                        </div>
-                        <form id="subsection3">
-                            <label> Undo, Redo, getAllMarks, testButton: </label>
-                            <br></br>
-                            <br></br>
-                            <button
-                                onClick={() => { undoOrRedo('undo') }}
-                            >Undo</button>
-                            <button
-                                onClick={() => { undoOrRedo('redo') }}
-                            >Redo</button>
-                            <button
-                                onClick={() => { console.log(doc.getAllMarks()) }}
-                            >getAllMarks</button>
-                            <button
-                                onClick={testButton}
-                            >testButton</button>
-                        </form>
                         <form id="subsection3">
                             <label> Add a New Test Block: </label>
                             <br></br>
@@ -430,10 +422,14 @@ const CreateTemplate = (props) => {
                             >Remove</button>
                         </form>
                         <form id="subsection3">
-                            <label> Add by Test Block # (Zero-based Index): </label>
-                            <br></br>
-                            <br></br>
+                            <label> Target by Test Block # (Zero-based Index): </label>
                             <input type="number" onChange={(event) => { event.preventDefault(); selectorVal = event.target.value; console.log(selectorVal) }} />
+                            <br></br>
+                            <br></br>
+                            <label for="fireEvent">Fire Event On Test</label>
+                            <select name='fireEvent' id='fireEvent' onChange={chosenEvent}>
+                                {foundHandlers}
+                            </select>
                             <br></br>
                             <br></br>
                             <button type='submit' className="dropbtn" onClick={handleNewAssertion}>Add Expect Statement</button>
@@ -446,11 +442,7 @@ const CreateTemplate = (props) => {
                                 {handlers}
                             </div> */}
 
-                            <label for="fireEvent">Fire Event On Test</label>
-                            <select name='fireEvent' id='fireEvent' onChange={chosenEvent}>
-                                {foundHandlers}
-                            </select>
-
+                            
 
 
 
@@ -463,16 +455,16 @@ const CreateTemplate = (props) => {
                             <br></br>
                             <br></br>
 
-                            <label for="queryEvent">Input Query On Assertion</label>
-                            <select name='queryEvent' id='queryEvent' onChange={specificDropdownMaker}>
+                            <label for="queryDropdown">Input Query On Assertion</label>
+                            <select name='queryDropdown' id='queryDropdown' onChange={specificDropdownMaker}>
                                 {realQueryDropdown}
                             </select>
 
                             <br></br>
                             <br></br>
 
-                            <label for="queryEvent">Select The Specfics</label>
-                            <select name='queryEvent' id='specEvent' onChange={chosenQuery}>
+                            <label for="specQueryDropdown">Select The Specfics</label>
+                            <select name='specQueryDropdown' id='specQueryDropdown' onChange={chosenQuery}>
                                 {specificDropdown}
                             </select>
 
@@ -482,10 +474,14 @@ const CreateTemplate = (props) => {
                 </div>
 
                 <div id="CreateTemplateColumnTwo">
-                    <div id="componentWindow" className="component-title">Component Window</div>
-                    <textarea id="componentWindowTextInput" defaultValue={file} onChange={handleFileChange} />
-                    <div id="templatePreviewWindow" className="component-title">Test Preview</div>
+                    <div className='componentWindowFrame'>
+                        <div id="componentWindow" className="component-title">Component Window</div>
+                        <textarea id="componentWindowTextInput" defaultValue={file} onChange={handleFileChange} />
+                    </div>
+                   
+                        
                     <div className='code-mirror-wrapper'>
+                        <div id="templatePreviewWindow" className="component-title">Test Preview</div>
                         <CodeWindow
                             value=''
                             displayName=''
@@ -493,6 +489,9 @@ const CreateTemplate = (props) => {
                             onChange={valueCapture}
                         />
                     </div>
+                 
+                    
+                    
                 </div>
             </div>
         </>
