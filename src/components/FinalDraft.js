@@ -31,8 +31,8 @@ const FinalDraft = (props) => {
             displayName=''
             onMount={onMount}
           />
-        <br></br>4
-          <button onClick={copyClipboard}>Copy Code</button>
+          <br></br>
+          <button onClick={copyClipboard} className='copyButton'>Copy Code</button>
         </div>
 
       </div>

@@ -46,6 +46,9 @@
   border: 1px solid #eee;
   height: auto;
 }
+.CodeMirror-scroll{
+  max-height: 500px;
+}
 
 .final-page{
   display: flex;
@@ -58,3 +61,8 @@
   background-color: navy;
   color: pink;
 } 
+
+.copyButton{
+  width: 100px;
+  height: 30px;
+}
