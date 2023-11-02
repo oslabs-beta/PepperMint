@@ -14,20 +14,29 @@ const FinalDraft = (props) => {
       navigator.clipboard.writeText(doc.getValue());
   }
 
+  let file = window.sessionStorage.getItem('fileCode')
+
   return (
     <>
       <br></br>
       <br></br>
       <br></br>
-      <div className='code-mirror-wrapper'>
-        <CodeWindow
-          value={window.sessionStorage.getItem("finalDraft")}
-          displayName=''
-          onMount={onMount}
-        />
-      <br></br>
-        <button onClick={copyClipboard}>Copy Code</button>
+      <div className='final-page'>
+
+        <textarea id='finalComponent' defaultValue={file} />
+      
+        <div className='code-mirror-wrapper'>
+          <CodeWindow
+            value={window.sessionStorage.getItem("finalDraft")}
+            displayName=''
+            onMount={onMount}
+          />
+        <br></br>4
+          <button onClick={copyClipboard}>Copy Code</button>
+        </div>
+
       </div>
+      
     </>
   )
 }
