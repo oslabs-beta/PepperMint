@@ -223,6 +223,8 @@ const CreateTemplate = (props) => {
 
     const [userProps, setUserProps] = useState('{}');
 
+
+
     const toggleDropdown = (event) => {
         event.preventDefault();
         setIsDropdownOpen(!isDropdownOpen);
@@ -353,15 +355,24 @@ const CreateTemplate = (props) => {
     }
 
     const toggleQueryDropdown = () => {
-        realQueryDropdown = queryDropdown.map(query =>
-            <option key={query} href="#comp1" onClick={specificDropdown} value={query}>{query}</option>);
+        const selectEl = document.getElementById('queryDropdown')
+        for (let i = 0; i < queryDropdown.length; i++) {
+            let optionEl = document.createElement('option');
+            optionEl.setAttribute('value', queryDropdown[i]);
+            optionEl.setAttribute('key', queryDropdown[i]);
+            optionEl.innerHTML = queryDropdown[i];
+            optionEl.addEventListener('click', specificDropdownMaker);
+            selectEl.appendChild(optionEl);
+        }
+       
+        //<option key={query} href="#comp1" onClick={specificDropdown} value={query}>{query}</option>);
     }
 
     function specificDropdownMaker(event) {
         event.preventDefault();
         console.log("What did the user select?", event.target.value);
         let newDropdown;
-        let specDropdown = document.getElementById('specEvent');
+        let specDropdown = document.getElementById('specQueryDropdown');
         specDropdown.innerHTML = '';
         let optionEl;
         if (event.target.value === 'getBy...') {
@@ -463,16 +474,16 @@ const CreateTemplate = (props) => {
                             <br></br>
                             <br></br>
 
-                            <label for="queryEvent">Input Query On Assertion</label>
-                            <select name='queryEvent' id='queryEvent' onChange={specificDropdownMaker}>
+                            <label for="queryDropdown">Input Query On Assertion</label>
+                            <select name='queryDropdown' id='queryDropdown' onChange={specificDropdownMaker}>
                                 {realQueryDropdown}
                             </select>
 
                             <br></br>
                             <br></br>
 
-                            <label for="queryEvent">Select The Specfics</label>
-                            <select name='queryEvent' id='specEvent' onChange={chosenQuery}>
+                            <label for="specQueryDropdown">Select The Specfics</label>
+                            <select name='specQueryDropdown' id='specQueryDropdown' onChange={chosenQuery}>
                                 {specificDropdown}
                             </select>
 
