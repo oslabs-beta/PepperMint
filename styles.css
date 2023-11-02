@@ -151,10 +151,13 @@ header {
     display: flex;
     flex-direction: column;
     font-size: 20px;
+    display: flex;
+    
 }
 
 .component-title {
     text-align: center;
+    height: 20px;
 }
 
 #CreateTemplateColumnOne,
@@ -278,6 +281,7 @@ ul.footer-links li {
     flex: 1;
     color: navy;
     font-size: x-large;
+    height: 50%;
 }
 
 #templatePreviewWindow {
@@ -294,7 +298,10 @@ button {
 #componentWindowTextInput {
     background-color: navy;
     color: pink;
-    height: 50%;
+    width: 100%;
+    height: 100%;
+    
+ 
     resize: none;
 }
 
