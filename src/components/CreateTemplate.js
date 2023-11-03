@@ -69,6 +69,9 @@ const CreateTemplate = (props) => {
 
         addContents(title, allowAdditional) {
 
+          console.log(`this.allowAdditional: ${this.allowAdditional}`);
+          console.log(`allowAdditional: ${allowAdditional}`);
+
             if (this.allowAdditional) {
                 doc.replaceRange(codeLineLib[title], this.fetchPosition('s'), this.fetchPosition('e'));
                 this.addInsertionPts(title, allowAdditional);
@@ -79,23 +82,25 @@ const CreateTemplate = (props) => {
 
         addInsertionPts(title, allowAdditional) {
 
-            if (!(insertionPtLib[title])) return;
+            if ((insertionPtLib[title])) {
 
-            const newInsertion = [];
+              const newInsertion = [];
 
-            insertionPtLib[title].forEach((insertionPt) => {
+              insertionPtLib[title].forEach((insertionPt) => {
 
-                newInsertion.push(
-                    new InsertionObject(
-                        { line: this.insertionStart.find().line + insertionPt.start.line, ch: insertionPt.start.char },
-                        { line: this.insertionStart.find().line + insertionPt.end.line, ch: insertionPt.end.char },
-                        insertionPt.kind
-                    )
-                );
+                  newInsertion.push(
+                      new InsertionObject(
+                          { line: this.insertionStart.find().line + insertionPt.start.line, ch: insertionPt.start.char },
+                          { line: this.insertionStart.find().line + insertionPt.end.line, ch: insertionPt.end.char },
+                          insertionPt.kind
+                      )
+                  );
 
-                this.contents.push(newInsertion);
+                  this.contents.push(newInsertion);
 
-            });
+              });
+
+            }
 
             if (allowAdditional) this.handleNewLines(this.kind);
 
@@ -180,7 +185,7 @@ const CreateTemplate = (props) => {
         macroStructure['props'].insertionZone.contents[0][0].addContents('propsList', false);
         macroStructure['mocks'].insertionZone.addContents('mockVar', true);
         macroStructure['jestHooks'].insertionZone.addContents('beforeAll', false)
-        macroStructure['jestHooks'].insertionZone.contents[0][0].addContents('render', true)    // macroStructure['props'].insertionZone.contents[0].contents[0].addContents('propsList', false);
+        macroStructure['jestHooks'].insertionZone.contents[0][0].addContents('render', false)    // macroStructure['props'].insertionZone.contents[0].contents[0].addContents('propsList', false);
         macroStructure['testZone'].insertionZone.addContents('testblock', true);
 
     }
@@ -291,7 +296,7 @@ const CreateTemplate = (props) => {
     const chosenEvent = (event) => {
         event.preventDefault();
         const ourValue = event.target.value;
-        codeLineLib['fireEvent'] = `fireEvent.${ourValue}();`
+        codeLineLib['fireEvent'] = `\nfireEvent.${ourValue}();\n`
 
         // Object.assign(macroStructure, {testZone: {
         //     start: bookmarkCreator({ line: 27, char: 0 }),
@@ -436,22 +441,6 @@ const CreateTemplate = (props) => {
                             <button className="dropbtn">Remove Expect Statement</button>
                             <br></br>
                             <br></br>
-
-                            {/* <button onClick={toggleDropdown} className="dropbtn" id="fireEvent" >Fire Event On Test ↓</button>
-                            <div id="myDropdown" className={isDropdownOpen ? "dropdown-content show" : "dropdown-content"}>
-                                {handlers}
-                            </div> */}
-
-                            
-
-
-
-
-                            {/* <button onClick={toggleQueryDropdown} className="dropbtn" id="queryEvent" > Add Query ↓</button>
-                            <div id="QueryDropdown" className={isDropdownOpen ? "dropdown-content show" : "dropdown-content"}>
-                                {realQueryDropdown}
-                            </div> */}
-
                             <br></br>
                             <br></br>
 

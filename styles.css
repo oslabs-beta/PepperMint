@@ -68,6 +68,7 @@
 
 }
 
+
 .title,
 .centered-box {
     flex: 1;
@@ -157,7 +158,7 @@ header {
 
 .component-title {
     text-align: center;
-    height: 20px;
+    height: 30px;
 }
 
 #CreateTemplateColumnOne,
