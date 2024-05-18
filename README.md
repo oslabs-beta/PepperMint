@@ -19,22 +19,33 @@ After launching the app, the user is prompted to select the component for which 
 If you’re ever tired of creating tests from scratch, give Peppermint a try! As an open source product, we are open to contributions from the community. Please refer to our Github for an up-to-date future roadmap.
 
 
-# *Instructions to Open Application on Mac*:
+# Instructions to Open Application on Mac:
 
-- Clone the repository
-git clone https://github.com/oslabs-beta/PepperMint.git
-
+Clone the repository: 
 ```
-# Install dependencies
-npm install
-# or
-npm install --force
+git clone https://github.com/oslabs-beta/PepperMint.git
+```
 
-# Run
+Install dependencies:
+```
+npm install
+```
+or
+```
+npm install --force
+```
+
+Run:
+```
 npm run forge-make
 ```
 
 Now you will be able to see a folder called 'out' in the cloned application's file structure. Open it, and then open file 'peppermint-darwin-x64'. In there, you can see and double-click on the Peppermint Electron App.
+
+From here on, to access application, you can just double-click on the Peppermint Electron App, or run:
+```
+npm start
+```
 
 
 ## Future Roadmap
